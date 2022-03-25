@@ -1,0 +1,29 @@
+{
+	"world": {
+		"disableWantedLevel": true,
+		"enablePvP": true,
+		"calmAI": true,
+		"disableDistantSirens": true
+	},
+	"player": {
+		"dbSave": 300000,
+		"defaultGroup": "user",
+		"groups": {
+			"user": {
+				"allPermissions": false
+			},
+			"admin": {
+				"allPermissions": true
+			}
+		}
+	},
+	"characters": {
+		"multiCharacter": true,
+		"defaultCoords": {
+			"x": 157.23,
+			"y": -993.29,
+			"z": 27.57,
+			"w": 163.57
+		}
+	}
+}
