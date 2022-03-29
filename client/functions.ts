@@ -8,7 +8,7 @@ NW.Functions.Teleport = (coords: Vector4) => {
 	const ped = PlayerPedId();
 	SetEntityCoords(ped, coords.x, coords.y, coords.z, true, false, false, false);
 	SetEntityHeading(ped, coords.w ? coords.w : 120.0);
-};
+}
 
 global.exports("Teleport", NW.Functions.Teleport);
 
@@ -20,5 +20,13 @@ NW.Functions.SaveCoords = () => {
 	coords[2] = Math.round((coords[2] - 1) * 1000) / 1000;
 	const heading = Math.round(GetEntityHeading(ped) * 1000) / 1000;
 	emitNet("NW:UpdateCharCoords", toVector4(coords, heading));
-};
+}
+
 global.exports("SaveCoords", NW.Functions.SaveCoords);
+
+NW.Functions.GetPlayerData = (callback: Function | null) => {
+	if (!callback) return NW.PlayerData;
+	callback(NW.PlayerData);
+}
+
+global.exports("GetPlayerData", NW.Functions.GetPlayerData);
