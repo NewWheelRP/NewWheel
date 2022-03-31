@@ -4,7 +4,7 @@ import { getLicense } from "./utils";
 
 NW.Functions = {};
 
-NW.Functions.OnFirstJoin = (source: string, license: string) => {
+NW.Functions.OnFirstJoin = (source: number, license: string) => {
 	let player = Player.New(source, license);
 	NW.Players.set(license, player);
 
@@ -26,7 +26,7 @@ NW.Functions.OnFirstJoin = (source: string, license: string) => {
 
 global.exports("OnFirstJoin", NW.Functions.OnFirstJoin);
 
-NW.Functions.GetLicense = (source: string): string | undefined => {
+NW.Functions.GetLicense = (source: number): string | undefined => {
 	return getLicense(source);
 };
 

@@ -11,7 +11,7 @@ interface PlayerDBObject {
 }
 
 export class Player {
-	private _source!: string;
+	private _source!: number;
 	private _license!: string;
 	private _name!: string;
 	private _group!: string;
@@ -24,7 +24,7 @@ export class Player {
 	private _sessionStartTime: number;
 	private _settings: Map<string, any> = new Map();
 
-	constructor(source: string, license: string) {
+	constructor(source: number, license: string) {
 		this._source = source;
 		this._license = license;
 		const curDate = new Date();
@@ -47,7 +47,7 @@ export class Player {
 		return obj;
 	};
 
-	static Load(source: string, data: PlayerDBObject): Player {
+	static Load(source: number, data: PlayerDBObject): Player {
 		let player = new Player(source, data.license);
 		player.setName(GetPlayerName(source));
 		player.setGroup(data.group);
@@ -58,7 +58,7 @@ export class Player {
 		return player;
 	}
 
-	static New(source: string, license: string): Player {
+	static New(source: number, license: string): Player {
 		const player = new Player(source, license);
 		player.setName(GetPlayerName(source));
 		player.setGroup(config.player.defaultGroup);
@@ -68,7 +68,10 @@ export class Player {
 		player.setLastLogin(curDate.getTime());
 		player.setPlayTime(0);
 		const groupObject: any = config.player.groups; // workaround for error of indexing it directly
-		if (IsPlayerAceAllowed(source, "command") && IsPlayerAceAllowed(source, "webadmin"))
+		if (
+			IsPlayerAceAllowed(source.toString(), "command") &&
+			IsPlayerAceAllowed(source.toString(), "webadmin")
+		)
 			player.setGroup(groupObject[Object.keys(config.player.groups).length - 1]);
 		return player;
 	}

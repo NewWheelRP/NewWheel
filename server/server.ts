@@ -1,6 +1,6 @@
 interface NW {
 	Functions: any;
-	Players: Map<String, Player>;
+	Players: Map<string, Player>;
 }
 
 export let NW: NW = {
@@ -15,7 +15,7 @@ import "./listeners";
 import "./connecting";
 import "./functions";
 
-NW.Players = new Map<String, Player>();
+NW.Players = new Map<string, Player>();
 
 global.exports("GetNWObject", () => {
 	return NW;
@@ -25,11 +25,11 @@ onNet("NW:LogoutPlayer", () => {
 	const player = NW.Functions.GetPlayerFromSource(global.source.toString());
 	NW.Functions.SavePlayer(player);
 	emitNet("NW:PlayerLogout", global.source);
-	loadCharacters(global.source.toString(), player.license);
+	loadCharacters(global.source, player.license);
 });
 
 onNet("NW:PlayerJoined", () => {
-	const src = global.source.toString();
+	const src = global.source;
 	const license = getLicense(src);
 	if (!license) return;
 	global.exports.oxmysql.single(
@@ -37,7 +37,7 @@ onNet("NW:PlayerJoined", () => {
 		[license],
 		(result: any) => {
 			if (!result) {
-				firstJoin(src, license);
+				firstJoin(src.toString(), license);
 				return;
 			}
 			const player = Player.Load(src, result);
@@ -47,7 +47,7 @@ onNet("NW:PlayerJoined", () => {
 	);
 });
 
-const loadCharacters = (source: string, license: string) => {
+const loadCharacters = (source: number, license: string) => {
 	global.exports.oxmysql.query(
 		"SELECT * FROM characters WHERE license = ?",
 		[license],
@@ -57,7 +57,7 @@ const loadCharacters = (source: string, license: string) => {
 	);
 };
 
-export const sendCharacters = (source: string, license: string, result?: any) => {
+export const sendCharacters = (source: number, license: string, result?: any) => {
 	const player = NW.Players.get(license);
 	const chars: Character[] = [];
 

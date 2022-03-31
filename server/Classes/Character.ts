@@ -3,7 +3,7 @@ import config from "../../config.json";
 import { Crypto } from "@nativewrappers/client";
 
 interface CharacterDBObject {
-	source: string;
+	source: number;
 	license: string;
 	citizenId: string;
 	firstName: string;
@@ -17,7 +17,7 @@ interface CharacterDBObject {
 }
 
 export class Character {
-	private _source!: string;
+	private _source!: number;
 	private _license!: string;
 	private _citizenId: string = "";
 	private _firstName: string = "";
@@ -30,7 +30,7 @@ export class Character {
 	private _coords: Vector4 | undefined = config.characters.defaultCoords;
 	private _customObjects: Map<string, any> = new Map();
 
-	static Load = (source: string, license: string, data: CharacterDBObject) => {
+	static Load = (source: number, license: string, data: CharacterDBObject) => {
 		let character = new Character(source, license);
 		character.setCitizenId(data.citizenId);
 		character.setFirstName(data.firstName);
@@ -44,7 +44,7 @@ export class Character {
 		return character;
 	};
 
-	static New = (source: string, license: string, data: any) => {
+	static New = (source: number, license: string, data: any) => {
 		let character = new Character(source, license);
 		character.setCitizenId(Crypto.uuidv4());
 		character.setFirstName(data.firstName);
@@ -73,13 +73,13 @@ export class Character {
 		return character;
 	};
 
-	constructor(source: string, license: string) {
+	constructor(source: number, license: string) {
 		this._source = source;
 		this._license = license;
 	}
 
 	public save = () => {
-		const inventory = global.exports["ox_inventory"].Inventory(Number.parseInt(this._source));
+		const inventory = global.exports["ox_inventory"].Inventory(this._source);
 		console.log(JSON.stringify(inventory.items));
 
 		setImmediate(async () => {
@@ -206,9 +206,51 @@ export class Character {
 		return this._customObjects.get(key);
 	};
 
+	public getCash = () => {
+		const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
+		if (!money) return 0;
+		return money.count;
+	};
+
+	public setCash = (amount: number) => {
+		const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
+
+		if (!money) {
+			global.exports["ox_inventory"].AddItem(this._source, "money");
+			return;
+		}
+
+		if (money.count > amount) {
+			const newAmount = money.count - amount;
+			global.exports["ox_inventory"].RemoveItem(this._source, "money", newAmount);
+			return;
+		}
+
+		const newAmount = amount - money.count;
+		global.exports["ox_inventory"].AddItem(this._source, "money", newAmount);
+	};
+
+	public addCash = (amount: number) => {
+		global.exports["ox_inventory"].AddItem(this._source, "money", amount);
+	};
+
+	public removeCash = (amount: number) => {
+		const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
+
+		if (!money) return;
+
+		if (money.count < amount) {
+			global.exports["ox_inventory"].RemoveItem(this._source, "money", money.count);
+			return;
+		}
+
+		global.exports["ox_inventory"].RemoveItem(this._source, "money", amount);
+	};
+
 	public loadInventory = () => {
+		//t
 		global.exports["ox_inventory"].setPlayerInventory({
-			source: Number.parseInt(this._source),
+			source: this._source,
 			identifier: this._citizenId,
 			name: `${this._firstName} ${this._lastName}`,
 			sex: this._sex.toString(),
