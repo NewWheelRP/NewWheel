@@ -16,6 +16,16 @@ interface CharacterDBObject {
 	coords: string;
 }
 
+interface CharacterNewObject {
+	firstName: string;
+	lastName: string;
+	dob: number;
+	height: number;
+	sex: string;
+	nationality: string;
+	backstory?: string;
+}
+
 export class Character {
 	private _source!: number;
 	private _license!: string;
@@ -44,7 +54,7 @@ export class Character {
 		return character;
 	};
 
-	static New = (source: number, license: string, data: any) => {
+	static New = (source: number, license: string, data: CharacterNewObject) => {
 		let character = new Character(source, license);
 		character.setCitizenId(Crypto.uuidv4());
 		character.setFirstName(data.firstName);
@@ -173,6 +183,7 @@ export class Character {
 	public getSex = (): string => {
 		return this._sex;
 	};
+
 	public setSex = (value: string) => {
 		this._sex = value;
 	};
