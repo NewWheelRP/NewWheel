@@ -187,9 +187,19 @@ export class Player {
 		return this._currentChar;
 	};
 
-	public setCurrentCharacter = (char: Character) => {
-		this._currentChar = char;
-		char.loadInventory();
+	public setCurrentCharacter = (char: Character | string) => {
+		if (char instanceof Character) {
+			this._currentChar = char;
+			char.loadInventory();
+			return;
+		}
+
+		const newChar = this._characters.get(char);
+
+		if (!newChar) return;
+
+		this._currentChar = newChar;
+		newChar.loadInventory();
 	};
 
 	public setSessionStartTime = (time: number) => {
