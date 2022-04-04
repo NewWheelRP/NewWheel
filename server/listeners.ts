@@ -58,7 +58,22 @@ onNet("NW:SaveAll", () => {
 	NW.Functions.SavePlayers();
 });
 
-on("onResourceStop", () => {
-	NW.Functions.SavePlayers();
-	emitNet("NW:PlayerLogout", -1);
+on("onResourceStop", (resource: string) => {
+	if (resource === "NewWheel") {
+		NW.Functions.SavePlayers();
+		emitNet("NW:PlayerLogout", -1);
+	} else if (resource === "ox_inventory") {
+		NW.Functions.SavePlayers();
+	}
+});
+
+on("onResourceStart", (resource: string) => {
+	if (resource === "ox_inventory") {
+		NW.Players.forEach((player: Player) => {
+			const character = player.getCurrentCharacter();
+			if (character) {
+				character.loadInventory();
+			}
+		});
+	}
 });
