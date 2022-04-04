@@ -54,9 +54,19 @@ NW.Functions.SavePlayers = () => {
 
 global.exports("SavePlayers", NW.Functions.SavePlayers);
 
-NW.Functions.SavePlayer = (player: Player, playerLeft?: boolean) => {
-	player.save();
-	if (playerLeft) NW.Players.delete(player.getLicense());
+NW.Functions.SavePlayer = (player: Player | number, playerLeft?: boolean) => {
+	let player2: any;
+
+	if (player instanceof Player) {
+		player2 = player;
+	} else {
+		player2 = NW.Functions.GetPlayerFromSource(player);
+	}
+
+	if (player2! instanceof Player) return;
+
+	player2.save();
+	if (playerLeft) NW.Players.delete(player2.getLicense());
 };
 
 global.exports("SavePlayer", NW.Functions.SavePlayer);
