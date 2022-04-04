@@ -11,11 +11,12 @@ export type Vector4 = {
 	w: number;
 };
 
-export type FormCharacterObject = {
+export type CharacterNewObject = {
 	firstName: string;
 	lastName: string;
-	dob: string;
+	dob: number;
 	height: number;
 	sex: string;
 	nationality: string;
+	backstory?: string;
 };

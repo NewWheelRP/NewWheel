@@ -2,7 +2,7 @@ import { Character } from "./Classes/Character";
 import { Player } from "./Classes/Player";
 import { getLicense } from "./utils";
 import { NW } from "./server";
-import { FormCharacterObject, Vector4 } from "../types/types";
+import { CharacterNewObject, Vector4 } from "../types/types";
 
 onNet("NW:SetCurrentChar", (id: string) => {
 	const _source = source;
@@ -24,7 +24,7 @@ onNet("NW:SetCurrentChar", (id: string) => {
 	emitNet("NW:Spawn", _source, char.getCoords());
 });
 
-onNet("NW:CreateNewCharacter", (data: FormCharacterObject) => {
+onNet("NW:CreateNewCharacter", (data: CharacterNewObject) => {
 	const player = NW.Functions.GetPlayerFromSource(source);
 	if (!player) return;
 	const character = Character.New(source, player.license, data);
@@ -56,4 +56,9 @@ on("playerDropped", (_reason: string) => {
 
 onNet("NW:SaveAll", () => {
 	NW.Functions.SavePlayers();
+});
+
+on("onResourceStop", () => {
+	NW.Functions.SavePlayers();
+	emitNet("NW:PlayerLogout", -1);
 });
