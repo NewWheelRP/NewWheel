@@ -13,4 +13,6 @@ files {
     'web/build/**/*'
 }
 
-dependency 'oxmysql'
+dependencies {
+    'oxmysql'
+} 

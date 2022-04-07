@@ -191,6 +191,7 @@ export class Player {
 		if (char instanceof Character) {
 			this._currentChar = char;
 			char.loadInventory();
+			char.loadPhone();
 			return;
 		}
 
@@ -200,6 +201,7 @@ export class Player {
 
 		this._currentChar = newChar;
 		newChar.loadInventory();
+		newChar.loadPhone();
 	};
 
 	public setSessionStartTime = (time: number) => {

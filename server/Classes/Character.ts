@@ -8,12 +8,14 @@ interface CharacterDBObject {
 	citizenId: string;
 	firstName: string;
 	lastName: string;
-	dob: Number;
-	height: Number;
+	dob: number;
+	height: number;
 	sex: string;
 	nationality: String;
 	backstory: String | undefined;
 	coords: string;
+	phone_number: number;
+	bank?: number;
 }
 
 interface CharacterNewObject {
@@ -32,13 +34,15 @@ export class Character {
 	private _citizenId: string = "";
 	private _firstName: string = "";
 	private _lastName: string = "";
-	private _DOB: Number = 0;
-	private _height: Number = 0;
+	private _DOB: number = 0;
+	private _height: number = 0;
 	private _sex: string = "";
 	private _nationality: String = "";
 	private _backStory: String | undefined = "";
 	private _coords: Vector4 | undefined = config.characters.defaultCoords;
+	private _phoneNumber: number = 0;
 	private _customObjects: Map<string, any> = new Map();
+	private _bank: number = 0;
 
 	static Load = (source: number, license: string, data: CharacterDBObject) => {
 		let character = new Character(source, license);
@@ -51,11 +55,17 @@ export class Character {
 		character.setNationality(data.nationality);
 		character.setBackStory(data.backstory || "");
 		character.setCoords(JSON.parse(data.coords));
+		character.setPhoneNumber(data.phone_number);
+		if (data.bank) character.setBank(data.bank);
 		return character;
 	};
 
 	static New = (source: number, license: string, data: CharacterNewObject) => {
 		let character = new Character(source, license);
+		let phoneNumber = 0;
+		if (config.characters.phone === "npwd")
+			phoneNumber = global.exports["npwd"].generatePhoneNumber();
+
 		character.setCitizenId(Crypto.uuidv4());
 		character.setFirstName(data.firstName);
 		character.setLastName(data.lastName);
@@ -65,8 +75,9 @@ export class Character {
 		character.setNationality(data.nationality);
 		character.setBackStory(data.backstory || "");
 		character.setCoords(config.characters.defaultCoords);
+		character.setPhoneNumber(phoneNumber);
 		global.exports.oxmysql.insert(
-			"INSERT INTO characters (citizenId, license, firstName, lastName, dob, height, sex, nationality, backStory, coords) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			"INSERT INTO characters (citizenId, license, firstName, lastName, dob, height, sex, nationality, backStory, coords, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			[
 				character.getCitizenId(),
 				character.getLicense(),
@@ -78,6 +89,7 @@ export class Character {
 				character.getNationality(),
 				character.getBackStory(),
 				JSON.stringify(character.getCoords()),
+				character.getPhoneNumber(),
 			]
 		);
 		return character;
@@ -94,7 +106,7 @@ export class Character {
 
 		setImmediate(async () => {
 			const affectedRows = global.exports.oxmysql.update_async(
-				"UPDATE characters SET firstName = ?, lastName = ?, dob = ?, height = ?, sex = ? , nationality = ? , backStory = ? , coords = ?, inventory = ? WHERE citizenId = ? ",
+				"UPDATE characters SET firstName = ?, lastName = ?, dob = ?, height = ?, sex = ? , nationality = ? , backStory = ? , coords = ?, inventory = ?, phone_number = ? WHERE citizenId = ? ",
 				[
 					this._firstName,
 					this._lastName,
@@ -105,6 +117,7 @@ export class Character {
 					this._backStory,
 					JSON.stringify(this._coords),
 					JSON.stringify(inventory.items) || {},
+					this._phoneNumber,
 					this._citizenId,
 				]
 			);
@@ -130,6 +143,7 @@ export class Character {
 			backStory: this._backStory,
 			coords: this._coords,
 		};
+
 		return obj;
 	};
 
@@ -165,7 +179,7 @@ export class Character {
 		return this._lastName;
 	};
 
-	public setDOB = (dob: Number) => {
+	public setDOB = (dob: number) => {
 		this._DOB = dob;
 	};
 
@@ -173,10 +187,10 @@ export class Character {
 		return this._DOB;
 	};
 
-	public getHeight = (): Number => {
+	public getHeight = (): number => {
 		return this._height;
 	};
-	public setHeight = (value: Number) => {
+	public setHeight = (value: number) => {
 		this._height = value;
 	};
 
@@ -258,15 +272,62 @@ export class Character {
 		global.exports["ox_inventory"].RemoveItem(this._source, "money", amount);
 	};
 
+	public setBank = (money: number) => {
+		if (config.characters.useSimpleBanking) {
+			this._bank = money;
+		}
+	};
+
+	public addBank = (money: number) => {
+		if (config.characters.useSimpleBanking) {
+			this._bank += money;
+		}
+	};
+
+	public removeBank = (money: number) => {
+		if (config.characters.useSimpleBanking) {
+			this._bank -= money;
+		}
+	};
+
+	public getBank = () => {
+		if (config.characters.useSimpleBanking) {
+			return this._bank;
+		}
+
+		return 0;
+	};
+
+	public getPhoneNumber = () => {
+		return this._phoneNumber;
+	};
+
+	public setPhoneNumber = (phone: number) => {
+		this._phoneNumber = phone;
+	};
+
 	public loadInventory = () => {
-		//t
-		global.exports["ox_inventory"].setPlayerInventory({
-			source: this._source,
-			identifier: this._citizenId,
-			name: `${this._firstName} ${this._lastName}`,
-			sex: this._sex.toString(),
-			dateofbirth: this._DOB.toLocaleString(),
-			groups: {},
-		});
+		if (config.characters.inventory === "ox_inventory") {
+			global.exports["ox_inventory"].setPlayerInventory({
+				source: this._source,
+				identifier: this._citizenId,
+				name: `${this._firstName} ${this._lastName}`,
+				sex: this._sex.toString(),
+				dateofbirth: this._DOB.toLocaleString(),
+				groups: {},
+			});
+		}
+	};
+
+	public loadPhone = () => {
+		if (config.characters.phone === "npwd") {
+			global.exports["npwd"].newPlayer({
+				source: this._source,
+				identifier: this._citizenId,
+				phoneNumber: this._phoneNumber,
+				firstName: this._firstName,
+				lastName: this._lastName,
+			});
+		}
 	};
 }

@@ -19,11 +19,14 @@
 	},
 	"characters": {
 		"multiCharacter": true,
+		"useSimpleBanking": true,
 		"defaultCoords": {
 			"x": 157.23,
 			"y": -993.29,
 			"z": 27.57,
 			"w": 163.57
-		}
+		},
+		"inventory": "ox_inventory",
+		"phone": "npwd"
 	}
 }

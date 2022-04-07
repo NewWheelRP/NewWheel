@@ -2,6 +2,7 @@ import { Character } from "./Classes/Character";
 import { Player } from "./Classes/Player";
 import { getLicense } from "./utils";
 import { NW } from "./server";
+import * as config from "../config.json";
 import { CharacterNewObject, Vector4 } from "../types/types";
 
 onNet("NW:SetCurrentChar", (id: string) => {
@@ -69,11 +70,13 @@ on("onResourceStop", (resource: string) => {
 
 on("onResourceStart", (resource: string) => {
 	if (resource === "ox_inventory") {
-		NW.Players.forEach((player: Player) => {
-			const character = player.getCurrentCharacter();
-			if (character) {
-				character.loadInventory();
-			}
-		});
+		if (config.characters.inventory === "ox_inventory") {
+			NW.Players.forEach((player: Player) => {
+				const character = player.getCurrentCharacter();
+				if (character) {
+					character.loadInventory();
+				}
+			});
+		}
 	}
 });
