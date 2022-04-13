@@ -1,11 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./components/App";
 import NewCharacter from "./components/NewCharacter";
 import CharactersProvider from "./providers/CharactersProvider";
 
-import { VisibilityProvider } from "./providers/VisibilityProvider";
+import { VisibilityProvider } from './providers/VisibilityProvider';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -15,7 +15,9 @@ import CharacterList from "./components/CharacterList";
 
 library.add(fas, far);
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root')!);
+
+root.render(
 	// <React.StrictMode>
 	<BrowserRouter>
 		<CharactersProvider>
@@ -29,6 +31,5 @@ ReactDOM.render(
 			</VisibilityProvider>
 		</CharactersProvider>
 	</BrowserRouter>,
-	// </React.StrictMode>,
-	document.getElementById("root")
+	// </React.StrictMode>
 );
