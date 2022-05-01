@@ -179,6 +179,10 @@ export class Character {
 		return this._lastName;
 	};
 
+	public getFullName = () => {
+		return this._firstName + " " + this._lastName;
+	};
+
 	public setDOB = (dob: number) => {
 		this._DOB = dob;
 	};
