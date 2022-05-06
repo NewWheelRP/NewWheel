@@ -10,7 +10,7 @@
 	"author": "FivemSpuds",
 	"license": "MIT",
 	"dependencies": {
-		"@nativewrappers/client": "^1.7.1",
+		"@nativewrappers/client": "^1.7.15",
 		"react": "^18.0.0",
 		"react-dom": "^18.0.0",
 		"uuid": "^8.3.2"
