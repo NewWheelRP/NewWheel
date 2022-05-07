@@ -4,7 +4,7 @@ import { getLicense } from "./utils";
 
 export const OnFirstJoin = (source: number, license: string) => {
 	let player = Player.New(source, license);
-	NW.Players.set(license, player);
+	NW.Players.set(source, player);
 
 	global.exports.oxmysql.insert(
 		`INSERT INTO players (license, name, groupName, firstLogin, lastLogin, playTime) VALUES (?, ?, ?, ?, ?, ?)`,
@@ -26,17 +26,7 @@ global.exports("OnFirstJoin", OnFirstJoin);
 
 global.exports("GetLicense", getLicense);
 
-export const GetPlayerFromSource = (source: string | number): Player | undefined => {
-	if (Number.isInteger(source)) source = source.toString();
-	const license = getLicense(source);
-	if (!license) return;
-	const player = NW.Players.get(license);
-	if (!player) {
-		console.error(`There was no player with id ${license}`);
-		return;
-	}
-	return player;
-};
+export const GetPlayerFromSource = (source: number): Player | undefined => NW.Players.get(source);
 
 global.exports("GetPlayerFromSource", GetPlayerFromSource);
 

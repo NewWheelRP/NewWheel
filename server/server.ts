@@ -1,9 +1,9 @@
 interface NW {
-	Players: Map<string, Player>;
+	Players: Map<number, Player>;
 }
 
 export const NW: NW = {
-	Players: undefined!,
+	Players: new Map<number, Player>(),
 };
 
 import { Character } from "./Classes/Character";
@@ -14,10 +14,8 @@ import "./listeners";
 import "./connecting";
 import "./functions";
 
-NW.Players = new Map<string, Player>();
-
 onNet("NW:LogoutPlayer", () => {
-	const player = GetPlayerFromSource(global.source.toString());
+	const player = GetPlayerFromSource(global.source);
 	if (!player) return;
 	SavePlayer(player);
 	emitNet("NW:PlayerLogout", global.source);
@@ -37,7 +35,7 @@ onNet("NW:PlayerJoined", () => {
 				return;
 			}
 			const player = Player.Load(src, result);
-			NW.Players.set(license, player);
+			NW.Players.set(src, player);
 			loadCharacters(src, license);
 		}
 	);
@@ -54,7 +52,7 @@ const loadCharacters = (source: number, license: string) => {
 };
 
 export const sendCharacters = (source: number, license: string, result?: any) => {
-	const player = NW.Players.get(license);
+	const player = NW.Players.get(source);
 	const chars: Character[] = [];
 
 	if (!player) return;

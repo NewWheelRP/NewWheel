@@ -1,6 +1,6 @@
 import { Crypto } from "@nativewrappers/client";
 
-export const getLicense = (player: number | string) => {
+export const getLicense = (player: number) => {
 	for (let i = 0; i < GetNumPlayerIdentifiers(player.toString()); i++) {
 		const identifier = GetPlayerIdentifier(player.toString(), i);
 		if (identifier.includes("license:")) return identifier;

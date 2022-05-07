@@ -7,13 +7,8 @@ import { CharacterNewObject, Vector4 } from "../types";
 import { GetPlayerFromSource, SavePlayer, SavePlayers } from "./functions";
 
 onNet("NW:SetCurrentChar", (id: string) => {
-	const _source = source;
-	const _license = getLicense(_source);
-	if (!_license) {
-		console.error("No license was found");
-		return;
-	}
-	const player = NW.Players.get(_license);
+	const source = global.source;
+	const player = NW.Players.get(source);
 	if (!player) {
 		console.error("No player was found");
 		return;
@@ -21,13 +16,13 @@ onNet("NW:SetCurrentChar", (id: string) => {
 	const char = player.getCharacter(id);
 	if (!char) return;
 	player.setCurrentCharacter(char);
-	emit("NW:CharacterChosen", _source);
+	emit("NW:CharacterChosen", source);
 	emitNet("NW:PlayerLoaded", source, player);
-	emitNet("NW:Spawn", _source, char.getCoords());
+	emitNet("NW:Spawn", source, char.getCoords());
 });
 
 onNet("NW:CreateNewCharacter", (data: CharacterNewObject) => {
-	const player = GetPlayerFromSource(source);
+	const player = GetPlayerFromSource(global.source);
 	if (!player) return;
 	const character = Character.New(source, player.getLicense(), data);
 	player.setCharacter(character);
