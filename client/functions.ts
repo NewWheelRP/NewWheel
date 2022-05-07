@@ -1,6 +1,6 @@
 import { Vector4 } from "../types/types";
 import { NW } from "./client";
-import { toVector4 } from "./utils";
+import { roundByThousands, toVector4 } from "./utils";
 
 NW.Functions = {};
 
@@ -15,18 +15,15 @@ global.exports("Teleport", NW.Functions.Teleport);
 NW.Functions.SaveCoords = () => {
 	const ped = PlayerPedId();
 	const coords = GetEntityCoords(ped, true);
-	coords[0] = Math.round(coords[0] * 1000) / 1000;
-	coords[1] = Math.round(coords[1] * 1000) / 1000;
-	coords[2] = Math.round((coords[2] - 1) * 1000) / 1000;
-	const heading = Math.round(GetEntityHeading(ped) * 1000) / 1000;
+	coords[0] = roundByThousands(coords[0]);
+	coords[1] = roundByThousands(coords[1]);
+	coords[2] = roundByThousands(coords[2] - 1);
+	const heading = roundByThousands(GetEntityHeading(ped));
 	emitNet("NW:UpdateCharCoords", toVector4(coords, heading));
 }
 
 global.exports("SaveCoords", NW.Functions.SaveCoords);
 
-NW.Functions.GetPlayerData = (callback: Function | null) => {
-	if (!callback) return NW.PlayerData;
-	callback(NW.PlayerData);
-}
+NW.Functions.GetPlayerData = () => NW.PlayerData;
 
 global.exports("GetPlayerData", NW.Functions.GetPlayerData);

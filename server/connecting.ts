@@ -7,15 +7,17 @@ on("playerConnecting", (name: string, _setKickReason: Function, deferrals: any) 
 		deferrals.update(`Hello ${name}. Your license is being checked.`);
 
 		let license: string = "";
-
-		for (let i = 0; i < GetNumPlayerIdentifiers(player); i++) {
+	
+		const identifierNum = GetNumPlayerIdentifiers(player);
+	
+		for (let i = 0; i < identifierNum; i++) {
 			const identifier = GetPlayerIdentifier(player, i);
 			if (identifier.includes("license:")) license = identifier;
 		}
 
 		// pretend to be a wait
 		setTimeout(() => {
-			if (license === "") deferrals.done("You don't have a valid license.");
+			if (!license || license === "") deferrals.done("You don't have a valid license.");
 			else deferrals.done();
 		}, 0);
 	}, 0);

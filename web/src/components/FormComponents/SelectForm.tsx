@@ -1,9 +1,8 @@
-import { FormState } from "react-hook-form";
 import RequiredError from "./RequiredError";
 
 interface InputFormProps {
 	label: string;
-	random: unknown;
+	random: any;
 	errors: any;
 	options: any[];
 }

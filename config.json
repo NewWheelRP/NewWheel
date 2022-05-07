@@ -27,6 +27,7 @@
 			"w": 163.57
 		},
 		"inventory": "ox_inventory",
-		"phone": "npwd"
+		"phone": "npwd",
+		"coordsSaveTimeout": 120000
 	}
 }

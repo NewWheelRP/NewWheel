@@ -30,6 +30,6 @@ root.render(
 				</Routes>
 			</VisibilityProvider>
 		</CharactersProvider>
-	</BrowserRouter>,
+	</BrowserRouter>
 	// </React.StrictMode>
 );

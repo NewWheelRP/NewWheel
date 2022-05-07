@@ -1,6 +1,5 @@
 import { NW } from "./client";
 import { Vector3, Vector4 } from "../types/types";
-import { Delay } from "./utils";
 
 onNet("NW:Spawn", (coords: Vector3) => {
 	NW.Functions.Teleport(coords);

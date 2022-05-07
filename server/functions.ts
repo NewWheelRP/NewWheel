@@ -18,7 +18,7 @@ NW.Functions.OnFirstJoin = (source: number, license: string) => {
 			player.getLastLogin(),
 			player.getPlayTime(),
 		],
-		(id: any) => {
+		() => {
 			sendCharacters(source, license, []);
 		}
 	);
@@ -47,9 +47,7 @@ global.exports("GetPlayerFromSource", NW.Functions.GetPlayerFromSource);
 
 NW.Functions.SavePlayers = () => {
 	console.info("Saving all players...");
-	NW.Players.forEach((player: Player) => {
-		NW.Functions.SavePlayer(player);
-	});
+	NW.Players.forEach((player: Player) => NW.Functions.SavePlayer(player));
 };
 
 global.exports("SavePlayers", NW.Functions.SavePlayers);

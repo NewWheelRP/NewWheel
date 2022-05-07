@@ -1,4 +1,5 @@
 type Props = {
+	children: JSX.Element | JSX.Element[];
 	visible: boolean;
 };
 

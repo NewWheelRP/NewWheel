@@ -1,7 +1,6 @@
 import * as Cfx from "@nativewrappers/client";
 import { Vector3 } from "@nativewrappers/client";
 import { NW } from "./client";
-import { Delay } from "./utils";
 
 RegisterCommand("car", async (_source: number, args: string[]) => {
 	if (args.length < 1) {
@@ -24,17 +23,16 @@ RegisterCommand("car", async (_source: number, args: string[]) => {
 	Cfx.Game.PlayerPed.setIntoVehicle(vehicle, Cfx.VehicleSeat.Driver);
 }, false);
 
-RegisterCommand("repairveh", async (_source: number, _args: string[]) => {
-	const veh = Cfx.Game.PlayerPed.CurrentVehicle;
-	if (veh) veh.repair();
+RegisterCommand("repairveh", async () => {
+	Cfx.Game.PlayerPed.CurrentVehicle?.repair();
 }, false);
 
-RegisterCommand("saveall", async (_source: number, _args: string[]) => {
+RegisterCommand("saveall", async () => {
 	NW.Functions.SaveCoords();
 	emitNet("NW:SaveAll");
 }, false);
 
-RegisterCommand("dv", async (_source: number, _args: string[]) => {
+RegisterCommand("dv", async () => {
 	const veh = Cfx.Game.PlayerPed.CurrentVehicle;
 	if (veh) {
 		veh.delete();
@@ -59,7 +57,7 @@ RegisterCommand("tp", async (_source: number, args: string[]) => {
 	SetEntityCoords(PlayerPedId(), x, y, z, true, false, false, false);
 }, false);
 
-RegisterCommand("tpw", async (_source: number, _args: string[]) => {
+RegisterCommand("tpw", async () => {
 	const waypoint = GetFirstBlipInfoId(8);
 	if (!waypoint) {
 		console.error("There was no waypoint set");
@@ -79,7 +77,7 @@ RegisterCommand("tpw", async (_source: number, _args: string[]) => {
 	DoScreenFadeIn(100);
 }, false);
 
-RegisterCommand("logout", async (_source: number, _args: string[]) => {
+RegisterCommand("logout", async () => {
 	if (!NW.PlayerData.loggedIn) return;
 	emitNet("NW:LogoutPlayer");
 }, false);

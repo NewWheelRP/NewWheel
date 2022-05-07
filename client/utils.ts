@@ -21,3 +21,5 @@ export const toVector4 = (coords: number[], heading: number): Vector4 => {
 	};
 	return newVec;
 }
+
+export const roundByThousands = (num: number): number => Math.round(num * 1000) / 1000;

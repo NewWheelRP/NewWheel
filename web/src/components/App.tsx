@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.css";
-import CharacterList from "./CharacterList";
 import { debugData } from "../utils/debugData";
 import { Outlet } from "react-router-dom";
 

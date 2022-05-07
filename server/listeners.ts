@@ -63,20 +63,12 @@ on("onResourceStop", (resource: string) => {
 	if (resource === "NewWheel") {
 		NW.Functions.SavePlayers();
 		emitNet("NW:PlayerLogout", -1);
-	} else if (resource === "ox_inventory") {
+	} else if (resource === config.characters.inventory) {
 		NW.Functions.SavePlayers();
 	}
 });
 
 on("onResourceStart", (resource: string) => {
-	if (resource === "ox_inventory") {
-		if (config.characters.inventory === "ox_inventory") {
-			NW.Players.forEach((player: Player) => {
-				const character = player.getCurrentCharacter();
-				if (character) {
-					character.loadInventory();
-				}
-			});
-		}
-	}
+	if (resource !== "ox_inventory" || config.characters.inventory !== "ox_inventory") return;
+	NW.Players.forEach((player: Player) => player.getCurrentCharacter()?.loadInventory());
 });

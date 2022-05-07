@@ -8,7 +8,7 @@ interface ContextValue {
 
 const CharactersCtx = React.createContext<ContextValue | null>(null);
 
-const CharactersProvider: React.FC = ({ children }) => {
+const CharactersProvider: React.FC<{ children: JSX.Element | JSX.Element[] }> = ({ children }) => {
 	const [value, setValue] = React.useState<Character[]>([]);
 
 	return (

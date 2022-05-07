@@ -3,7 +3,7 @@ interface NW {
 	Players: Map<string, Player>;
 }
 
-export let NW: NW = {
+export const NW: NW = {
 	Functions: undefined!,
 	Players: undefined!,
 };
@@ -16,10 +16,6 @@ import "./connecting";
 import "./functions";
 
 NW.Players = new Map<string, Player>();
-
-global.exports("GetNWObject", () => {
-	return NW;
-});
 
 onNet("NW:LogoutPlayer", () => {
 	const player = NW.Functions.GetPlayerFromSource(global.source.toString());
