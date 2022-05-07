@@ -1,5 +1,6 @@
 import { NW } from "./client";
-import { Vector3, Vector4 } from "../types";
+import { PlayerDataObject, CharacterDataObject } from "../types";
+import { Vector3 } from "@nativewrappers/client";
 import { Teleport } from "./functions"; 
 
 onNet("NW:Spawn", (coords: Vector3) => {
@@ -20,10 +21,8 @@ onNet("NW:ShowCharacterSelection", (characters: any[]) => {
 	});
 });
 
-onNet("NW:PlayerLoaded", (data: any) => {
-	NW.PlayerData = data;
-});
-
-onNet("NW:SetPlayerData", (playerData: any) => {
+onNet("NW:SetPlayerData", (playerData: PlayerDataObject, characterData: CharacterDataObject | undefined) => {
 	NW.PlayerData = playerData;
+	if (characterData) NW.CharacterData = characterData;
+	else if (playerData.character) NW.CharacterData = playerData.character;
 });

@@ -1,9 +1,30 @@
+import { PlayerDataObject, CharacterDataObject } from "../types";
+
 interface NW {
-	PlayerData: any;
+	PlayerData: PlayerDataObject,
+	CharacterData: CharacterDataObject
 }
 
+// This consists of placeholders until the player has been created
 export const NW: NW = {
-	PlayerData: {},
+	PlayerData: {
+		source: -1,
+		license: "placeholderLicense",
+		name: "placeholderName",
+		group: "placeholderGroup",
+		loggedIn: false,
+		firstLogin: -1,
+		lastLogin: -1,
+		playTime: -1,
+		sessionStartTime: -1,
+	},
+	CharacterData: {
+		source: -1,
+		license: "placeholderLicense",
+		firstName: "placeholderFirstName",
+		lastName: "placeholderLastName",
+		coords: undefined,
+	}
 };
 
 import "./functions";

@@ -1,5 +1,6 @@
 import * as config from "../../config.json";
 import { Character } from "./Character";
+import { PlayerDataObject } from "../../types";
 
 interface PlayerDBObject {
 	license: string;
@@ -32,7 +33,7 @@ export class Player {
 	}
 
 	public toClientObject = () => {
-		const obj = {
+		const obj: PlayerDataObject = {
 			source: this._source,
 			license: this._license,
 			name: this._name,
@@ -43,12 +44,13 @@ export class Player {
 			playTime: this._playTime,
 			character: this._currentChar.toClientObject(),
 			sessionStartTime: this._sessionStartTime,
+			settings: this._settings
 		};
 		return obj;
 	};
 
-	static Load(source: number, data: PlayerDBObject): Player {
-		let player = new Player(source, data.license);
+	static load(source: number, data: PlayerDBObject): Player {
+		const player = new Player(source, data.license);
 		player.setName(GetPlayerName(source));
 		player.setGroup(data.group);
 		player.setLoggedIn(true);
@@ -58,7 +60,7 @@ export class Player {
 		return player;
 	}
 
-	static New(source: number, license: string): Player {
+	static new(source: number, license: string): Player {
 		const player = new Player(source, license);
 		player.setName(GetPlayerName(source));
 		player.setGroup(config.player.defaultGroup);
@@ -69,8 +71,7 @@ export class Player {
 		player.setPlayTime(0);
 		const groupObject: any = config.player.groups; // workaround for error of indexing it directly
 		if (
-			IsPlayerAceAllowed(source.toString(), "command") &&
-			IsPlayerAceAllowed(source.toString(), "webadmin")
+			IsPlayerAceAllowed(source.toString(), "command")
 		)
 			player.setGroup(groupObject[Object.keys(config.player.groups).length - 1]);
 		return player;
@@ -93,25 +94,17 @@ export class Player {
 		if (this._currentChar) this._currentChar.save();
 	};
 
-	public getSource = () => {
-		return this._source;
-	};
+	public getSource = () => this._source;;
 
-	public getLicense = () => {
-		return this._license;
-	};
+	public getLicense = () => this._license;
 
-	public getName = () => {
-		return this._name;
-	};
+	public getName = () => this._name;
 
 	public setName = (theName: string) => {
 		this._name = theName;
 	};
 
-	public getGroup = () => {
-		return this._group;
-	};
+	public getGroup = () => this._group;
 
 	public setGroup = (group: string) => {
 		const groups: any = config.player.groups; // workaround for error of indexing it directly
@@ -119,33 +112,25 @@ export class Player {
 		this._group = group;
 	};
 
-	public getLoggedIn = () => {
-		return this._loggedIn;
-	};
+	public getLoggedIn = () => this._loggedIn;
 
 	public setLoggedIn = (value: boolean) => {
 		this._loggedIn = value;
 	};
 
-	public getFirstLogin = () => {
-		return this._firstLogin;
-	};
+	public getFirstLogin = () => this._firstLogin;
 
 	public setFirstLogin = (login: number) => {
 		this._firstLogin = login;
 	};
 
-	public getLastLogin = () => {
-		return this._lastLogin;
-	};
+	public getLastLogin = () => this._lastLogin;
 
 	public setLastLogin = (login: number) => {
 		this._lastLogin = login;
 	};
 
-	public getPlayTime = () => {
-		return this._playTime;
-	};
+	public getPlayTime = () => this._playTime;
 
 	public setPlayTime = (time: number) => {
 		this._playTime = time;
@@ -153,20 +138,14 @@ export class Player {
 
 	public setCharacters = (characters: Character[]) => {
 		if (!characters) return;
-		characters.map((character) => {
-			this._characters.set(character.getCitizenId(), character);
-		});
+		characters.map((character) => this._characters.set(character.getCitizenId(), character));
 	};
 
 	public setCharacter = (character: Character) => {
 		this._characters.set(character.getCitizenId(), character);
 	};
 
-	public getCharacter = (citizenId: string) => {
-		let char = this._characters.get(citizenId);
-
-		return char;
-	};
+	public getCharacter = (citizenId: string) => this._characters.get(citizenId);
 
 	public switchCharacter = (citizenId: string) => {
 		this._currentChar.save();
@@ -183,9 +162,7 @@ export class Player {
 		});
 	};
 
-	public getCurrentCharacter = () => {
-		return this._currentChar;
-	};
+	public getCurrentCharacter = () => this._currentChar;
 
 	public setCurrentCharacter = (char: Character | string) => {
 		if (char instanceof Character) {
@@ -208,15 +185,11 @@ export class Player {
 		this._sessionStartTime = time;
 	};
 
-	public getSessionStartTime = () => {
-		return this._sessionStartTime;
-	};
+	public getSessionStartTime = () => this._sessionStartTime;
 
 	public setSetting = (key: string, value: any) => {
 		this._settings.set(key, value);
 	};
 
-	public getSetting = (key: string) => {
-		return this._settings.get(key);
-	};
+	public getSetting = (key: string) => this._settings.get(key);
 }

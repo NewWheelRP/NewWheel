@@ -1,83 +1,73 @@
-import { Vector4 } from "../../types";
+import { CharacterDataObject, CharacterNewObject, Vector4 } from "../../types";
 import config from "../../config.json";
 import { Crypto } from "@nativewrappers/client";
 
 interface CharacterDBObject {
 	source: number;
 	license: string;
-	citizenId: string;
 	firstName: string;
 	lastName: string;
-	dob: number;
-	height: number;
-	sex: string;
-	nationality: String;
-	backstory: String | undefined;
 	coords: string;
-	phone_number: number;
-	bank?: number;
-}
-
-interface CharacterNewObject {
-	firstName: string;
-	lastName: string;
-	dob: number;
-	height: number;
-	sex: string;
-	nationality: string;
+	citizenId?: string;
+	dob?: number;
+	height?: number;
+	sex?: string;
+	nationality?: string;
 	backstory?: string;
+	phone_number?: number;
+	bank?: number;
 }
 
 export class Character {
 	private _source!: number;
 	private _license!: string;
-	private _citizenId: string = "";
 	private _firstName: string = "";
 	private _lastName: string = "";
+	private _coords: Vector4 | undefined = config.characters.defaultCoords;
+	private _citizenId: string = "";
 	private _DOB: number = 0;
 	private _height: number = 0;
 	private _sex: string = "";
-	private _nationality: String = "";
-	private _backStory: String | undefined = "";
-	private _coords: Vector4 | undefined = config.characters.defaultCoords;
+	private _nationality: string = "";
+	private _backstory: string = "";
 	private _phoneNumber: number = 0;
-	private _customObjects: Map<string, any> = new Map();
 	private _bank: number = 0;
+	private _customObjects: Map<string, any> = new Map();
 
-	static Load = (source: number, license: string, data: CharacterDBObject) => {
-		let character = new Character(source, license);
-		character.setCitizenId(data.citizenId);
+	static load = (source: number, license: string, data: CharacterDBObject) => {
+		const character = new Character(source, license);
 		character.setFirstName(data.firstName);
 		character.setLastName(data.lastName);
-		character.setDOB(data.dob);
-		character.setHeight(data.height);
-		character.setSex(data.sex);
-		character.setNationality(data.nationality);
-		character.setBackStory(data.backstory || "");
 		character.setCoords(JSON.parse(data.coords));
-		character.setPhoneNumber(data.phone_number);
+		if (data.citizenId) character.setCitizenId(data.citizenId);
+		if (data.dob) character.setDOB(data.dob);
+		if (data.height) character.setHeight(data.height);
+		if (data.sex) character.setSex(data.sex);
+		if (data.nationality) character.setNationality(data.nationality);
+		if (data.backstory) character.setBackstory(data.backstory);
+		if (data.phone_number) character.setPhoneNumber(data.phone_number);
 		if (data.bank) character.setBank(data.bank);
 		return character;
 	};
 
-	static New = (source: number, license: string, data: CharacterNewObject) => {
-		let character = new Character(source, license);
+	static new = (source: number, license: string, data: CharacterNewObject) => {
+		const character = new Character(source, license);
 		let phoneNumber = 0;
 		if (config.characters.phone === "npwd")
 			phoneNumber = global.exports["npwd"].generatePhoneNumber();
 
-		character.setCitizenId(Crypto.uuidv4());
 		character.setFirstName(data.firstName);
 		character.setLastName(data.lastName);
-		character.setDOB(new Date(data.dob).getTime());
-		character.setHeight(data.height);
-		character.setSex(data.sex);
-		character.setNationality(data.nationality);
-		character.setBackStory(data.backstory || "");
 		character.setCoords(config.characters.defaultCoords);
-		character.setPhoneNumber(phoneNumber);
+		character.setCitizenId(Crypto.uuidv4());
+		if (data.dob) character.setDOB(new Date(data.dob).getTime());
+		if (data.height) character.setHeight(data.height);
+		if (data.sex) character.setSex(data.sex);
+		if (data.nationality) character.setNationality(data.nationality);
+		if (data.backstory) character.setBackstory(data.backstory);
+		if (phoneNumber !== 0) character.setPhoneNumber(phoneNumber);
 		global.exports.oxmysql.insert(
-			"INSERT INTO characters (citizenId, license, firstName, lastName, dob, height, sex, nationality, backStory, coords, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			"INSERT INTO characters (citizenId, license, firstName, lastName, dob, height, sex, nationality, backstory, coords, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			[
 				character.getCitizenId(),
 				character.getLicense(),
@@ -87,7 +77,7 @@ export class Character {
 				character.getHeight(),
 				character.getSex(),
 				character.getNationality(),
-				character.getBackStory(),
+				character.getBackstory(),
 				JSON.stringify(character.getCoords()),
 				character.getPhoneNumber(),
 			]
@@ -106,7 +96,7 @@ export class Character {
 
 		setImmediate(async () => {
 			const affectedRows = global.exports.oxmysql.update_async(
-				"UPDATE characters SET firstName = ?, lastName = ?, dob = ?, height = ?, sex = ? , nationality = ? , backStory = ? , coords = ?, inventory = ?, phone_number = ? WHERE citizenId = ? ",
+				"UPDATE characters SET firstName = ?, lastName = ?, dob = ?, height = ?, sex = ? , nationality = ? , backstory = ? , coords = ?, inventory = ?, phone_number = ? WHERE citizenId = ? ",
 				[
 					this._firstName,
 					this._lastName,
@@ -114,7 +104,7 @@ export class Character {
 					this._height,
 					this._sex,
 					this._nationality,
-					this._backStory,
+					this._backstory,
 					JSON.stringify(this._coords),
 					JSON.stringify(inventory.items) || {},
 					this._phoneNumber,
@@ -131,53 +121,45 @@ export class Character {
 	};
 
 	public toClientObject = () => {
-		const obj = {
+		const obj: CharacterDataObject = {
+			source: this._source,
+			license: this._license,
 			citizenId: this._citizenId,
 			firstName: this._firstName,
 			lastName: this._lastName,
-			license: this._license,
 			dob: this._DOB,
 			height: this._height,
 			sex: this._sex,
 			nationality: this._nationality,
-			backStory: this._backStory,
+			backstory: this._backstory,
 			coords: this._coords,
+			customObjects: this._customObjects
 		};
 
 		return obj;
 	};
 
-	public getSource = () => {
-		return this._source;
-	};
+	public getSource = () => this._source;
 
-	public getLicense = () => {
-		return this._license;
-	};
+	public getLicense = () => this._license;
 
 	public setCitizenId = (id: string) => {
 		this._citizenId = id;
 	};
 
-	public getCitizenId = () => {
-		return this._citizenId;
-	};
+	public getCitizenId = () => this._citizenId;
 
 	public setFirstName = (name: string) => {
 		this._firstName = name;
 	};
 
-	public getFirstName = () => {
-		return this._firstName;
-	};
+	public getFirstName = () => this._firstName;
 
 	public setLastName = (name: string) => {
 		this._lastName = name;
 	};
 
-	public getLastName = () => {
-		return this._lastName;
-	};
+	public getLastName = () => this._lastName;
 
 	public getFullName = () => {
 		return this._firstName + " " + this._lastName;
@@ -187,42 +169,30 @@ export class Character {
 		this._DOB = dob;
 	};
 
-	public getDOB = () => {
-		return this._DOB;
-	};
+	public getDOB = () => this._DOB;
 
-	public getHeight = (): number => {
-		return this._height;
-	};
+	public getHeight = (): number => this._height;
 	public setHeight = (value: number) => {
 		this._height = value;
 	};
 
-	public getSex = (): string => {
-		return this._sex;
-	};
+	public getSex = (): string => this._sex;
 
 	public setSex = (value: string) => {
 		this._sex = value;
 	};
 
-	public getNationality = (): String => {
-		return this._nationality;
-	};
-	public setNationality = (value: String) => {
+	public getNationality = (): string => this._nationality;
+	public setNationality = (value: string) => {
 		this._nationality = value;
 	};
 
-	public getBackStory = (): String | undefined => {
-		return this._backStory;
-	};
-	public setBackStory = (value: String | undefined) => {
-		this._backStory = value;
+	public getBackstory = (): string => this._backstory;
+	public setBackstory = (value: string) => {
+		this._backstory = value;
 	};
 
-	public getCoords = (): Vector4 | undefined => {
-		return this._coords;
-	};
+	public getCoords = (): Vector4 | undefined => this._coords;
 	public setCoords = (value: Vector4 | undefined) => {
 		this._coords = value;
 	};
@@ -231,9 +201,7 @@ export class Character {
 		this._customObjects.set(key, value);
 	};
 
-	public getObject = (key: string) => {
-		return this._customObjects.get(key);
-	};
+	public getObject = (key: string) => this._customObjects.get(key);
 
 	public getCash = () => {
 		const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
@@ -302,9 +270,7 @@ export class Character {
 		return 0;
 	};
 
-	public getPhoneNumber = () => {
-		return this._phoneNumber;
-	};
+	public getPhoneNumber = () => this._phoneNumber;
 
 	public setPhoneNumber = (phone: number) => {
 		this._phoneNumber = phone;

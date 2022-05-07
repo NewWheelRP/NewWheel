@@ -1,4 +1,4 @@
-import { Vector3, Vector4 } from "../types";
+import { Vector3 } from "@nativewrappers/client";
 import { NW } from "./client";
 import { roundByThousands, toVector4 } from "./utils";
 

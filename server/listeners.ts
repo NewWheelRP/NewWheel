@@ -1,6 +1,5 @@
 import { Character } from "./Classes/Character";
 import { Player } from "./Classes/Player";
-import { getLicense } from "./utils";
 import { NW } from "./server";
 import * as config from "../config.json";
 import { CharacterNewObject, Vector4 } from "../types";
@@ -18,18 +17,21 @@ onNet("NW:SetCurrentChar", (id: string) => {
 	player.setCurrentCharacter(char);
 	emit("NW:CharacterChosen", source);
 	emitNet("NW:PlayerLoaded", source, player);
+	emitNet("NW:SetPlayerData", source, player);
 	emitNet("NW:Spawn", source, char.getCoords());
 });
 
 onNet("NW:CreateNewCharacter", (data: CharacterNewObject) => {
-	const player = GetPlayerFromSource(global.source);
+	const source = global.source;
+	const player = GetPlayerFromSource(source);
 	if (!player) return;
-	const character = Character.New(source, player.getLicense(), data);
+	const character = Character.new(source, player.getLicense(), data);
 	player.setCharacter(character);
 	player.setCurrentCharacter(character);
 	player.save();
 	emit("NW:CharacterChosen", source);
 	emitNet("NW:PlayerLoaded", source, player);
+	emitNet("NW:SetPlayerData", source, player);
 	emitNet("NW:Spawn", source, character.getCoords());
 });
 

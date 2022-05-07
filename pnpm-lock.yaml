@@ -3,25 +3,21 @@ lockfileVersion: 5.4
 specifiers:
   '@citizenfx/client': 2.0.5546-1
   '@citizenfx/server': 2.0.5546-1
-  '@nativewrappers/client': ^1.7.15
+  '@nativewrappers/client': ^1.7.19
   '@types/node': ^17.0.31
-  '@types/uuid': ^8.3.4
   esbuild: ^0.14.38
   lerna: ^4.0.0
   typescript: ^4.5.2
-  uuid: ^8.3.2
 
 dependencies:
-  '@nativewrappers/client': 1.7.16
+  '@nativewrappers/client': 1.7.19
   esbuild: 0.14.38
   lerna: 4.0.0
-  uuid: 8.3.2
 
 devDependencies:
   '@citizenfx/client': 2.0.5546-1
   '@citizenfx/server': 2.0.5546-1
   '@types/node': 17.0.31
-  '@types/uuid': 8.3.4
   typescript: 4.6.4
 
 packages:
@@ -752,8 +748,8 @@ packages:
       write-file-atomic: 3.0.3
     dev: false
 
-  /@nativewrappers/client/1.7.16:
-    resolution: {integrity: sha512-DHh1VOmpgWLfdYcEhPATWLIVpAjRHm4bIPASuLDbevxxW4mTFNS73iUGEMJZhKKct7KnOsvAHFOOwvwbzkO1Jw==}
+  /@nativewrappers/client/1.7.19:
+    resolution: {integrity: sha512-DFDOGyBWeDjHE32oQI31mDDRg2VTMBgcXy3wUmWVznCKnpBeDnaApci+oXZ+ucH3DwKppy9C0Y/sXZNkP/q59g==}
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
@@ -972,10 +968,6 @@ packages:
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
     dev: false
-
-  /@types/uuid/8.3.4:
-    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
-    dev: true
 
   /JSONStream/1.3.5:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
@@ -4464,11 +4456,6 @@ packages:
   /uuid/3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
     deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
-    hasBin: true
-    dev: false
-
-  /uuid/8.3.2:
-    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
     dev: false
 

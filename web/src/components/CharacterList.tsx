@@ -28,8 +28,8 @@ const CharacterList: React.FC = () => {
 	};
 
 	const handleDelete = (id: number) => {
-		let array = [...characters.value];
-		let value = array[id];
+		const array = [...characters.value];
+		const value = array[id];
 		if (id !== -1) {
 			characters.setValue(array);
 			// Handle the deleteion of the character

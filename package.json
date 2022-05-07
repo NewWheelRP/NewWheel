@@ -12,16 +12,14 @@
 	"author": "New Wheel",
 	"license": "MIT",
 	"dependencies": {
-		"@nativewrappers/client": "^1.7.15",
+		"@nativewrappers/client": "^1.7.19",
 		"esbuild": "^0.14.38",
-		"lerna": "^4.0.0",
-		"uuid": "^8.3.2"
+		"lerna": "^4.0.0"
 	},
 	"devDependencies": {
 		"@citizenfx/client": "2.0.5546-1",
 		"@citizenfx/server": "2.0.5546-1",
 		"@types/node": "^17.0.31",
-		"@types/uuid": "^8.3.4",
 		"typescript": "^4.5.2"
 	}
 }

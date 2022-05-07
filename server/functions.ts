@@ -3,7 +3,7 @@ import { NW, sendCharacters } from "./server";
 import { getLicense } from "./utils";
 
 export const OnFirstJoin = (source: number, license: string) => {
-	let player = Player.New(source, license);
+	const player = Player.new(source, license);
 	NW.Players.set(source, player);
 
 	global.exports.oxmysql.insert(

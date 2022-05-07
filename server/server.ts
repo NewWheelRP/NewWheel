@@ -34,7 +34,7 @@ onNet("NW:PlayerJoined", () => {
 				firstJoin(src, license);
 				return;
 			}
-			const player = Player.Load(src, result);
+			const player = Player.load(src, result);
 			NW.Players.set(src, player);
 			loadCharacters(src, license);
 		}
@@ -60,7 +60,7 @@ export const sendCharacters = (source: number, license: string, result?: any) =>
 	const newChars: any = [];
 	if (result) {
 		result.forEach((v: any) => {
-			const char = Character.Load(source, license, v);
+			const char = Character.load(source, license, v);
 			newChars.push(char.toClientObject());
 
 			chars.push(char);
