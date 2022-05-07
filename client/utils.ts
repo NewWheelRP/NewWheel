@@ -1,4 +1,4 @@
-import { Vector4 } from "../types/types";
+import { Vector4 } from "../types";
 
 export const Delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 

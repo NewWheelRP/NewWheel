@@ -3,7 +3,7 @@ import { Player } from "./Classes/Player";
 import { getLicense } from "./utils";
 import { NW } from "./server";
 import * as config from "../config.json";
-import { CharacterNewObject, Vector4 } from "../types/types";
+import { CharacterNewObject, Vector4 } from "../types";
 import { GetPlayerFromSource, SavePlayer, SavePlayers } from "./functions";
 
 onNet("NW:SetCurrentChar", (id: string) => {

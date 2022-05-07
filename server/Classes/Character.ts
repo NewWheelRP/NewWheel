@@ -1,4 +1,4 @@
-import { Vector4 } from "../../types/types";
+import { Vector4 } from "../../types";
 import config from "../../config.json";
 import { Crypto } from "@nativewrappers/client";
 

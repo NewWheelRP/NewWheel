@@ -1,5 +1,5 @@
 import { NW } from "./client";
-import { Vector3, Vector4 } from "../types/types";
+import { Vector3, Vector4 } from "../types";
 import { Teleport } from "./functions"; 
 
 onNet("NW:Spawn", (coords: Vector3) => {
