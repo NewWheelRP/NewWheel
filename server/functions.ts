@@ -1,3 +1,4 @@
+import { enumValues } from "@nativewrappers/client";
 import { Player } from "./Classes/Player";
 import { NW, sendCharacters } from "./server";
 import { getLicense } from "./utils";
@@ -31,9 +32,9 @@ export const GetPlayerFromSource = (source: number): Player | undefined => NW.Pl
 global.exports("GetPlayerFromSource", GetPlayerFromSource);
 
 export const GetPlayerFromLicense = (license: string): Player | undefined => {
-	for (const [_key, value] of NW.Players) {
-		if (value.getLicense() === license) return value;
-	}
+	NW.Players.forEach((player: Player) => {
+		if (player.getLicense() === license) return player;
+	})
 	return;
 };
 
@@ -58,7 +59,7 @@ export const SavePlayer = (player: Player | number, playerLeft?: boolean) => {
 	if (player2! instanceof Player) return;
 
 	player2.save();
-	if (playerLeft) NW.Players.delete(player2.getLicense());
+	if (playerLeft) NW.Players.delete(player2.getSource());
 };
 
 global.exports("SavePlayer", SavePlayer);
