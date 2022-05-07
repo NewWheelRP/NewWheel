@@ -4,6 +4,7 @@ import { getLicense } from "./utils";
 import { NW } from "./server";
 import * as config from "../config.json";
 import { CharacterNewObject, Vector4 } from "../types/types";
+import { GetPlayerFromSource, SavePlayer, SavePlayers } from "./functions";
 
 onNet("NW:SetCurrentChar", (id: string) => {
 	const _source = source;
@@ -26,11 +27,11 @@ onNet("NW:SetCurrentChar", (id: string) => {
 });
 
 onNet("NW:CreateNewCharacter", (data: CharacterNewObject) => {
-	const player = NW.Functions.GetPlayerFromSource(source);
+	const player = GetPlayerFromSource(source);
 	if (!player) return;
-	const character = Character.New(source, player.license, data);
+	const character = Character.New(source, player.getLicense(), data);
 	player.setCharacter(character);
-	player.currentCharacter = character;
+	player.setCurrentCharacter(character);
 	player.save();
 	emit("NW:CharacterChosen", source);
 	emitNet("NW:PlayerLoaded", source, player);
@@ -38,33 +39,35 @@ onNet("NW:CreateNewCharacter", (data: CharacterNewObject) => {
 });
 
 onNet("NW:DeleteCharacter", (data: string) => {
-	const player = NW.Functions.GetPlayerFromSource(source);
+	const player = GetPlayerFromSource(source);
 	if (!player) return;
 	player.deleteCharacter(data);
 });
 
 onNet("NW:UpdateCharCoords", (data: Vector4) => {
-	const player = NW.Functions.GetPlayerFromSource(source);
+	const player = GetPlayerFromSource(source);
+	if (!player) return;
 	const character = player.getCurrentCharacter();
-	if (character) character.coords = data;
+	if (character) character.setCoords(data);
 });
 
 on("playerDropped", (_reason: string) => {
-	const player = NW.Functions.GetPlayerFromSource(global.source);
-	NW.Functions.SavePlayer(player, true);
+	const player = GetPlayerFromSource(global.source);
+	if (!player) return;
+	SavePlayer(player, true);
 	emitNet("NW:PlayerLogout", global.source);
 });
 
 onNet("NW:SaveAll", () => {
-	NW.Functions.SavePlayers();
+	SavePlayers();
 });
 
 on("onResourceStop", (resource: string) => {
 	if (resource === "NewWheel") {
-		NW.Functions.SavePlayers();
+		SavePlayers();
 		emitNet("NW:PlayerLogout", -1);
 	} else if (resource === config.characters.inventory) {
-		NW.Functions.SavePlayers();
+		SavePlayers();
 	}
 });
 

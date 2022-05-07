@@ -1,16 +1,15 @@
 interface NW {
-	Functions: any;
 	Players: Map<string, Player>;
 }
 
 export const NW: NW = {
-	Functions: undefined!,
 	Players: undefined!,
 };
 
 import { Character } from "./Classes/Character";
 import { Player } from "./Classes/Player";
 import { getLicense } from "./utils";
+import { GetPlayerFromSource, SavePlayer, SavePlayers, OnFirstJoin } from "./functions";
 import "./listeners";
 import "./connecting";
 import "./functions";
@@ -18,10 +17,11 @@ import "./functions";
 NW.Players = new Map<string, Player>();
 
 onNet("NW:LogoutPlayer", () => {
-	const player = NW.Functions.GetPlayerFromSource(global.source.toString());
-	NW.Functions.SavePlayer(player);
+	const player = GetPlayerFromSource(global.source.toString());
+	if (!player) return;
+	SavePlayer(player);
 	emitNet("NW:PlayerLogout", global.source);
-	loadCharacters(global.source, player.license);
+	loadCharacters(global.source, player.getLicense());
 });
 
 onNet("NW:PlayerJoined", () => {
@@ -33,7 +33,7 @@ onNet("NW:PlayerJoined", () => {
 		[license],
 		(result: any) => {
 			if (!result) {
-				firstJoin(src.toString(), license);
+				firstJoin(src, license);
 				return;
 			}
 			const player = Player.Load(src, result);
@@ -73,13 +73,13 @@ export const sendCharacters = (source: number, license: string, result?: any) =>
 	emitNet("NW:ShowCharacterSelection", source, newChars);
 };
 
-const firstJoin = (source: string, license: string) => {
+const firstJoin = (source: number, license: string) => {
 	// Create player
-	NW.Functions.OnFirstJoin(source, license);
+	OnFirstJoin(source, license);
 	// Welcome screen
 	// Intro to server
 };
 
 setTimeout(() => {
-	NW.Functions.SavePlayers();
+	SavePlayers();
 }, 300000);

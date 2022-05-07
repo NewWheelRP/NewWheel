@@ -1,10 +1,8 @@
 interface NW {
-	Functions: any;
 	PlayerData: any;
 }
 
 export const NW: NW = {
-	Functions: undefined!,
 	PlayerData: {},
 };
 
@@ -14,6 +12,7 @@ import "./commands";
 import "./nui";
 import "./listeners";
 import * as config from "./../config.json";
+import { SaveCoords } from "./functions";
 
 const playerJoiningTimeout = setTimeout(() => {
 	if (NetworkIsPlayerActive(PlayerId())) {
@@ -25,5 +24,5 @@ const playerJoiningTimeout = setTimeout(() => {
 }, 500);
 
 setTimeout(() => {
-	NW.Functions.SaveCoords();
+	SaveCoords();
 }, config.characters.coordsSaveTimeout);

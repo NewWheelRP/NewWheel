@@ -1,8 +1,9 @@
 import { NW } from "./client";
 import { Vector3, Vector4 } from "../types/types";
+import { Teleport } from "./functions"; 
 
 onNet("NW:Spawn", (coords: Vector3) => {
-	NW.Functions.Teleport(coords);
+	Teleport(coords);
 });
 
 onNet("NW:ShowCharacterSelection", (characters: any[]) => {
@@ -25,8 +26,4 @@ onNet("NW:PlayerLoaded", (data: any) => {
 
 onNet("NW:SetPlayerData", (playerData: any) => {
 	NW.PlayerData = playerData;
-});
-
-onNet("NW:Teleport", (coords: Vector4) => {
-	NW.Functions.Teleport(coords);
 });

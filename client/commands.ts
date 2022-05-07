@@ -1,6 +1,7 @@
 import * as Cfx from "@nativewrappers/client";
 import { Vector3 } from "@nativewrappers/client";
 import { NW } from "./client";
+import { SaveCoords } from "./functions";
 
 RegisterCommand("car", async (_source: number, args: string[]) => {
 	if (args.length < 1) {
@@ -28,7 +29,7 @@ RegisterCommand("repairveh", async () => {
 }, false);
 
 RegisterCommand("saveall", async () => {
-	NW.Functions.SaveCoords();
+	SaveCoords();
 	emitNet("NW:SaveAll");
 }, false);
 

@@ -2,9 +2,7 @@ import { Player } from "./Classes/Player";
 import { NW, sendCharacters } from "./server";
 import { getLicense } from "./utils";
 
-NW.Functions = {};
-
-NW.Functions.OnFirstJoin = (source: number, license: string) => {
+export const OnFirstJoin = (source: number, license: string) => {
 	let player = Player.New(source, license);
 	NW.Players.set(license, player);
 
@@ -24,17 +22,14 @@ NW.Functions.OnFirstJoin = (source: number, license: string) => {
 	);
 };
 
-global.exports("OnFirstJoin", NW.Functions.OnFirstJoin);
+global.exports("OnFirstJoin", OnFirstJoin);
 
-NW.Functions.GetLicense = (source: number): string | undefined => {
-	return getLicense(source);
-};
+global.exports("GetLicense", getLicense);
 
-global.exports("GetLicense", NW.Functions.GetLicense);
-
-NW.Functions.GetPlayerFromSource = (source: string | number): Player | undefined => {
+export const GetPlayerFromSource = (source: string | number): Player | undefined => {
 	if (Number.isInteger(source)) source = source.toString();
-	const license = NW.Functions.GetLicense(source);
+	const license = getLicense(source);
+	if (!license) return;
 	const player = NW.Players.get(license);
 	if (!player) {
 		console.error(`There was no player with id ${license}`);
@@ -43,22 +38,22 @@ NW.Functions.GetPlayerFromSource = (source: string | number): Player | undefined
 	return player;
 };
 
-global.exports("GetPlayerFromSource", NW.Functions.GetPlayerFromSource);
+global.exports("GetPlayerFromSource", GetPlayerFromSource);
 
-NW.Functions.SavePlayers = () => {
+export const SavePlayers = () => {
 	console.info("Saving all players...");
-	NW.Players.forEach((player: Player) => NW.Functions.SavePlayer(player));
+	NW.Players.forEach((player: Player) => SavePlayer(player));
 };
 
-global.exports("SavePlayers", NW.Functions.SavePlayers);
+global.exports("SavePlayers", SavePlayers);
 
-NW.Functions.SavePlayer = (player: Player | number, playerLeft?: boolean) => {
+export const SavePlayer = (player: Player | number, playerLeft?: boolean) => {
 	let player2: any;
 
 	if (player instanceof Player) {
 		player2 = player;
 	} else {
-		player2 = NW.Functions.GetPlayerFromSource(player);
+		player2 = GetPlayerFromSource(player);
 	}
 
 	if (player2! instanceof Player) return;
@@ -67,4 +62,4 @@ NW.Functions.SavePlayer = (player: Player | number, playerLeft?: boolean) => {
 	if (playerLeft) NW.Players.delete(player2.getLicense());
 };
 
-global.exports("SavePlayer", NW.Functions.SavePlayer);
+global.exports("SavePlayer", SavePlayer);
