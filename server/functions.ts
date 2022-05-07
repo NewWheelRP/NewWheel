@@ -30,6 +30,15 @@ export const GetPlayerFromSource = (source: number): Player | undefined => NW.Pl
 
 global.exports("GetPlayerFromSource", GetPlayerFromSource);
 
+export const GetPlayerFromLicense = (license: string): Player | undefined => {
+	for (const [_key, value] of NW.Players) {
+		if (value.getLicense() === license) return value;
+	}
+	return;
+};
+
+global.exports("GetPlayerFromLicense", GetPlayerFromLicense);
+
 export const SavePlayers = () => {
 	console.info("Saving all players...");
 	NW.Players.forEach((player: Player) => SavePlayer(player));
