@@ -1,4 +1,3 @@
-import { enumValues } from "@nativewrappers/client";
 import { Player } from "./Classes/Player";
 import { NW, sendCharacters } from "./server";
 import { getLicense } from "./utils";
