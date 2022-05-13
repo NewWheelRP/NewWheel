@@ -2,8 +2,8 @@ import { Character } from "./Classes/Character";
 import { Player } from "./Classes/Player";
 import { NW } from "./server";
 import * as config from "../config.json";
-import { CharacterNewObject, Vector4 } from "../types";
-import { GetPlayerFromSource, SavePlayer, SavePlayers } from "./functions";
+import { CharacterNewObject, PlayerDataObject, Vector4 } from "../types";
+import { GetPlayerFromSource, SavePlayer, SavePlayers, UpdatePlayerDataClient } from "./functions";
 
 onNet("NW:SetCurrentChar", (id: string) => {
 	const source = global.source;
@@ -15,9 +15,10 @@ onNet("NW:SetCurrentChar", (id: string) => {
 	const char = player.getCharacter(id);
 	if (!char) return;
 	player.setCurrentCharacter(char);
+	const clientObject: PlayerDataObject = player.toClientObject();
 	emit("NW:CharacterChosen", source);
-	emitNet("NW:PlayerLoaded", source, player);
-	emitNet("NW:SetPlayerData", source, player);
+	emitNet("NW:PlayerLoaded", source, clientObject);
+	UpdatePlayerDataClient(clientObject);
 	emitNet("NW:Spawn", source, char.getCoords());
 });
 
@@ -29,9 +30,10 @@ onNet("NW:CreateNewCharacter", (data: CharacterNewObject) => {
 	player.setCharacter(character);
 	player.setCurrentCharacter(character);
 	player.save();
+	const clientObject: PlayerDataObject = player.toClientObject();
 	emit("NW:CharacterChosen", source);
-	emitNet("NW:PlayerLoaded", source, player);
-	emitNet("NW:SetPlayerData", source, player);
+	emitNet("NW:PlayerLoaded", source, clientObject);
+	UpdatePlayerDataClient(clientObject);
 	emitNet("NW:Spawn", source, character.getCoords());
 });
 

@@ -1,13 +1,13 @@
 interface NW {
-	Players: Map<number, Player>;
+	Players: Map<number, PlayerClass>;
 }
 
 export const NW: NW = {
-	Players: new Map<number, Player>(),
+	Players: new Map<number, PlayerClass>(),
 };
 
 import { Character, CharacterDBObject } from "./Classes/Character";
-import { Player, PlayerDBObject } from "./Classes/Player";
+import { Player as PlayerClass, PlayerDBObject } from "./Classes/Player";
 import { getLicense } from "./utils";
 import { GetPlayerFromSource, SavePlayer, SavePlayers, OnFirstJoin } from "./functions";
 import "./listeners";
@@ -34,11 +34,12 @@ onNet("NW:PlayerJoined", () => {
 				firstJoin(src, license);
 				return;
 			}
-			const player = Player.load(src, result);
+			const player = PlayerClass.load(src, result);
 			NW.Players.set(src, player);
 			loadCharacters(src, license);
 		}
 	);
+	Player(src).state.set("playerDataUpdatedAt", 0, true);
 });
 
 const loadCharacters = (source: number, license: string) => {
