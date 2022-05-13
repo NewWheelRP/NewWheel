@@ -10,7 +10,7 @@ RegisterCommand("car", async (_source: number, args: string[]) => {
 	}
 
 	const coords = GetEntityCoords(PlayerPedId(), true);
-	const vehicle: any = await Cfx.World.createVehicle(
+	const vehicle: Cfx.Vehicle | null = await Cfx.World.createVehicle(
 		new Cfx.Model(args[0]),
 		new Vector3(coords[0], coords[1], coords[2]),
 		4

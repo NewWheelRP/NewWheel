@@ -6,8 +6,8 @@ export const NW: NW = {
 	Players: new Map<number, Player>(),
 };
 
-import { Character } from "./Classes/Character";
-import { Player } from "./Classes/Player";
+import { Character, CharacterDBObject } from "./Classes/Character";
+import { Player, PlayerDBObject } from "./Classes/Player";
 import { getLicense } from "./utils";
 import { GetPlayerFromSource, SavePlayer, SavePlayers, OnFirstJoin } from "./functions";
 import "./listeners";
@@ -29,7 +29,7 @@ onNet("NW:PlayerJoined", () => {
 	global.exports.oxmysql.single(
 		"SELECT * FROM players WHERE license = ?",
 		[license],
-		(result: any) => {
+		(result: PlayerDBObject) => {
 			if (!result) {
 				firstJoin(src, license);
 				return;
@@ -45,13 +45,13 @@ const loadCharacters = (source: number, license: string) => {
 	global.exports.oxmysql.query(
 		"SELECT * FROM characters WHERE license = ?",
 		[license],
-		(result: any) => {
+		(result: CharacterDBObject[]) => {
 			sendCharacters(source, license, result);
 		}
 	);
 };
 
-export const sendCharacters = (source: number, license: string, result?: any) => {
+export const sendCharacters = (source: number, license: string, result?: CharacterDBObject[]) => {
 	const player = NW.Players.get(source);
 	const chars: Character[] = [];
 
@@ -59,7 +59,7 @@ export const sendCharacters = (source: number, license: string, result?: any) =>
 
 	const newChars: any = [];
 	if (result) {
-		result.forEach((v: any) => {
+		result.forEach((v: CharacterDBObject) => {
 			const char = Character.load(source, license, v);
 			newChars.push(char.toClientObject());
 

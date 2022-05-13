@@ -2,7 +2,7 @@ import * as config from "../../config.json";
 import { Character } from "./Character";
 import { PlayerDataObject } from "../../types";
 
-interface PlayerDBObject {
+export interface PlayerDBObject {
 	license: string;
 	name: string;
 	group: string;
@@ -69,11 +69,6 @@ export class Player {
 		player.setFirstLogin(curDate.getTime());
 		player.setLastLogin(curDate.getTime());
 		player.setPlayTime(0);
-		const groupObject: any = config.player.groups; // workaround for error of indexing it directly
-		if (
-			IsPlayerAceAllowed(source.toString(), "command")
-		)
-			player.setGroup(groupObject[Object.keys(config.player.groups).length - 1]);
 		return player;
 	}
 

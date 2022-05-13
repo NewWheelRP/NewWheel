@@ -2,7 +2,7 @@ import { CharacterDataObject, CharacterNewObject, Vector4 } from "../../types";
 import config from "../../config.json";
 import { Crypto } from "@nativewrappers/client";
 
-interface CharacterDBObject {
+export interface CharacterDBObject {
 	source: number;
 	license: string;
 	firstName: string;

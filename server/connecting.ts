@@ -1,15 +1,15 @@
 on("playerConnecting", (name: string, _setKickReason: Function, deferrals: any) => {
 	deferrals.defer();
 
-	const player: any = global.source;
+	const player: string = global.source.toString();
 
 	setTimeout(() => {
 		deferrals.update(`Hello ${name}. Your license is being checked.`);
 
 		let license: string = "";
-	
+
 		const identifierNum = GetNumPlayerIdentifiers(player);
-	
+
 		for (let i = 0; i < identifierNum; i++) {
 			const identifier = GetPlayerIdentifier(player, i);
 			if (identifier.includes("license:")) license = identifier;
