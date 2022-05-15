@@ -33,10 +33,11 @@ import "./commands";
 import "./nui";
 import "./listeners";
 import * as config from "./../config.json";
+import { Game } from "@nativewrappers/client";
 import { SaveCoords } from "./functions";
 
 const playerJoiningTimeout = setTimeout(() => {
-	if (NetworkIsPlayerActive(PlayerId())) {
+	if (NetworkIsPlayerActive(Game.Player.Handle)) {
 		global.exports.spawnmanager.setAutoSpawn(true);
 		DoScreenFadeOut(0);
 		emitNet("NW:PlayerJoined");

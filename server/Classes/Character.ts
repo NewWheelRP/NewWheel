@@ -1,29 +1,15 @@
-import { CharacterDataObject, CharacterNewObject, Vector4 } from "../../types";
+import { CharacterDataObject, CharacterNewObject, CharacterDBObject } from "../../types";
+import { Vector4 } from "@nativewrappers/client";
 import config from "../../config.json";
 import { Crypto } from "@nativewrappers/client";
 
-export interface CharacterDBObject {
-	source: number;
-	license: string;
-	firstName: string;
-	lastName: string;
-	coords: string;
-	citizenId?: string;
-	dob?: number;
-	height?: number;
-	sex?: string;
-	nationality?: string;
-	backstory?: string;
-	phone_number?: number;
-	bank?: number;
-}
-
 export class Character {
+	private static defaultCoords: Vector4 = new Vector4(config.characters.defaultCoords.x, config.characters.defaultCoords.y, config.characters.defaultCoords.z, config.characters.defaultCoords.w);
 	private _source!: number;
 	private _license!: string;
 	private _firstName: string = "";
 	private _lastName: string = "";
-	private _coords: Vector4 | undefined = config.characters.defaultCoords;
+	private _coords: Vector4 | undefined = Character.defaultCoords;
 	private _citizenId: string = "";
 	private _DOB: number = 0;
 	private _height: number = 0;
@@ -34,7 +20,7 @@ export class Character {
 	private _bank: number = 0;
 	private _customObjects: Map<string, any> = new Map();
 
-	static load = (source: number, license: string, data: CharacterDBObject) => {
+	static load = (source: number, license: string, data: CharacterDBObject): Character => {
 		const character = new Character(source, license);
 		character.setFirstName(data.firstName);
 		character.setLastName(data.lastName);
@@ -50,15 +36,14 @@ export class Character {
 		return character;
 	};
 
-	static new = (source: number, license: string, data: CharacterNewObject) => {
+	static new = (source: number, license: string, data: CharacterNewObject): Character => {
 		const character = new Character(source, license);
 		let phoneNumber = 0;
-		if (config.characters.phone === "npwd")
-			phoneNumber = global.exports["npwd"].generatePhoneNumber();
+		if (config.characters.phone === "npwd") phoneNumber = global.exports["npwd"].generatePhoneNumber();
 
 		character.setFirstName(data.firstName);
 		character.setLastName(data.lastName);
-		character.setCoords(config.characters.defaultCoords);
+		character.setCoords(Character.defaultCoords);
 		character.setCitizenId(Crypto.uuidv4());
 		if (data.dob) character.setDOB(new Date(data.dob).getTime());
 		if (data.height) character.setHeight(data.height);
@@ -90,7 +75,7 @@ export class Character {
 		this._license = license;
 	}
 
-	public save = () => {
+	public save = (): void => {
 		const inventory = global.exports["ox_inventory"].Inventory(this._source);
 		console.log(JSON.stringify(inventory.items));
 
@@ -106,21 +91,21 @@ export class Character {
 					this._nationality,
 					this._backstory,
 					JSON.stringify(this._coords),
-					JSON.stringify(inventory.items) || {},
+					JSON.stringify(inventory.items) || "{}",
 					this._phoneNumber,
 					this._citizenId,
 				]
 			);
-			if (affectedRows) console.log(`Character: ${this._firstName} ${this._lastName} was saved!`);
+			if (affectedRows) console.log(`[id: ${this._source}] Character: ${this._firstName} ${this._lastName} was saved!`);
 		});
 
 		// Save every custom object, each custom object should implement its own save logic
-		this._customObjects.forEach((obj) => {
+		this._customObjects.forEach((obj: any) => {
 			obj.save();
 		});
 	};
 
-	public toClientObject = () => {
+	public toClientObject = (): CharacterDataObject => {
 		const obj: CharacterDataObject = {
 			source: this._source,
 			license: this._license,
@@ -139,77 +124,101 @@ export class Character {
 		return obj;
 	};
 
-	public getSource = () => this._source;
+	public toDBObject = (): CharacterDBObject => {
+		const obj: CharacterDBObject = {
+			source: this._source,
+			license: this._license,
+			firstName: this._firstName,
+			lastName: this._lastName,
+			coords: JSON.stringify(this._coords),
+			citizenId: this._citizenId,
+			dob: this._DOB,
+			height: this._height,
+			sex: this._sex,
+			nationality: this._nationality,
+			backstory: this._backstory,
+			phone_number: this._phoneNumber,
+			bank: this._bank
+		};
 
-	public getLicense = () => this._license;
+		return obj;
+	};
 
-	public setCitizenId = (id: string) => {
+	public getSource = (): number => this._source;
+
+	public getLicense = (): string => this._license;
+
+	public setCitizenId = (id: string): void => {
 		this._citizenId = id;
 	};
 
-	public getCitizenId = () => this._citizenId;
+	public getCitizenId = (): string => this._citizenId;
 
-	public setFirstName = (name: string) => {
+	public setFirstName = (name: string): void => {
 		this._firstName = name;
 	};
 
-	public getFirstName = () => this._firstName;
+	public getFirstName = (): string => this._firstName;
 
-	public setLastName = (name: string) => {
+	public setLastName = (name: string): void => {
 		this._lastName = name;
 	};
 
-	public getLastName = () => this._lastName;
+	public getLastName = (): string => this._lastName;
 
-	public getFullName = () => {
+	public getFullName = (): string => {
 		return this._firstName + " " + this._lastName;
 	};
 
-	public setDOB = (dob: number) => {
+	public setDOB = (dob: number): void => {
 		this._DOB = dob;
 	};
 
-	public getDOB = () => this._DOB;
+	public getDOB = (): number => this._DOB;
 
 	public getHeight = (): number => this._height;
-	public setHeight = (value: number) => {
+
+	public setHeight = (value: number): void => {
 		this._height = value;
 	};
 
 	public getSex = (): string => this._sex;
 
-	public setSex = (value: string) => {
+	public setSex = (value: string): void => {
 		this._sex = value;
 	};
 
 	public getNationality = (): string => this._nationality;
-	public setNationality = (value: string) => {
+
+	public setNationality = (value: string): void => {
 		this._nationality = value;
 	};
 
 	public getBackstory = (): string => this._backstory;
-	public setBackstory = (value: string) => {
+
+	public setBackstory = (value: string): void => {
 		this._backstory = value;
 	};
 
 	public getCoords = (): Vector4 | undefined => this._coords;
-	public setCoords = (value: Vector4 | undefined) => {
+
+	public setCoords = (value: Vector4 | undefined): void => {
 		this._coords = value;
 	};
 
-	public addObject = (key: string, value: any) => {
+	public addObject = (key: string, value: any): void => {
 		this._customObjects.set(key, value);
 	};
 
-	public getObject = (key: string) => this._customObjects.get(key);
+	public getObject = (key: string): any => this._customObjects.get(key);
 
-	public getCash = () => {
+	public getCash = (): number => {
 		const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
 		if (!money) return 0;
 		return money.count;
 	};
 
-	public setCash = (amount: number) => {
+	public setCash = (amount: number): void => {
 		const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
 
 		if (!money) {
@@ -227,11 +236,11 @@ export class Character {
 		global.exports["ox_inventory"].AddItem(this._source, "money", newAmount);
 	};
 
-	public addCash = (amount: number) => {
+	public addCash = (amount: number): void => {
 		global.exports["ox_inventory"].AddItem(this._source, "money", amount);
 	};
 
-	public removeCash = (amount: number) => {
+	public removeCash = (amount: number): void => {
 		const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
 
 		if (!money) return;
@@ -244,25 +253,25 @@ export class Character {
 		global.exports["ox_inventory"].RemoveItem(this._source, "money", amount);
 	};
 
-	public setBank = (money: number) => {
+	public setBank = (money: number): void => {
 		if (config.characters.useSimpleBanking) {
 			this._bank = money;
 		}
 	};
 
-	public addBank = (money: number) => {
+	public addBank = (money: number): void => {
 		if (config.characters.useSimpleBanking) {
 			this._bank += money;
 		}
 	};
 
-	public removeBank = (money: number) => {
+	public removeBank = (money: number): void => {
 		if (config.characters.useSimpleBanking) {
 			this._bank -= money;
 		}
 	};
 
-	public getBank = () => {
+	public getBank = (): number => {
 		if (config.characters.useSimpleBanking) {
 			return this._bank;
 		}
@@ -270,13 +279,13 @@ export class Character {
 		return 0;
 	};
 
-	public getPhoneNumber = () => this._phoneNumber;
+	public getPhoneNumber = (): number => this._phoneNumber;
 
-	public setPhoneNumber = (phone: number) => {
+	public setPhoneNumber = (phone: number): void => {
 		this._phoneNumber = phone;
 	};
 
-	public loadInventory = () => {
+	public loadInventory = (): void => {
 		if (config.characters.inventory === "ox_inventory") {
 			global.exports["ox_inventory"].setPlayerInventory({
 				source: this._source,
@@ -289,7 +298,7 @@ export class Character {
 		}
 	};
 
-	public loadPhone = () => {
+	public loadPhone = (): void => {
 		if (config.characters.phone === "npwd") {
 			global.exports["npwd"].newPlayer({
 				source: this._source,

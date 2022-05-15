@@ -7,12 +7,18 @@ export const OnFirstJoin = (source: number, license: string) => {
 	const player = PlayerClass.new(source, license);
 	NW.Players.set(source, player);
 
+	let groups: string | string[] = player.getGroups();
+
+	if (Array.isArray(groups)) {
+		groups = JSON.stringify(groups);
+	}
+
 	global.exports.oxmysql.insert(
-		`INSERT INTO players (license, name, groupName, firstLogin, lastLogin, playTime) VALUES (?, ?, ?, ?, ?, ?)`,
+		`INSERT INTO players (license, name, groups, firstLogin, lastLogin, playTime) VALUES (?, ?, ?, ?, ?, ?)`,
 		[
 			player.getLicense(),
 			player.getName(),
-			player.getGroup(),
+			groups,
 			player.getFirstLogin(),
 			player.getLastLogin(),
 			player.getPlayTime(),
@@ -50,18 +56,13 @@ global.exports("SavePlayers", SavePlayers);
 export const SavePlayer = (player: PlayerClass | number, playerLeft?: boolean) => {
 	let player2: PlayerClass | undefined;
 
-	// @ts-ignore
-	if (player instanceof Player) player2 = player;
-
-	//@ts-ignore
+	if (player instanceof PlayerClass) player2 = player;
 	else player2 = GetPlayerFromSource(player);
 
-	if (!player2 || player2! instanceof Player) return;
+	if (!player2 || !(player2 instanceof PlayerClass)) return;
 
-	// @ts-ignore
 	player2.save();
 
-	// @ts-ignore
 	if (playerLeft) NW.Players.delete(player2.getSource());
 };
 

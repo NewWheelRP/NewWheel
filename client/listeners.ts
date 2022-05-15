@@ -7,7 +7,7 @@ onNet("NW:Spawn", (coords: Vector3) => {
 	Teleport(coords);
 });
 
-onNet("NW:ShowCharacterSelection", (characters: any[]) => {
+onNet("NW:ShowCharacterSelection", (characters: CharacterDataObject[]) => {
 	SetNuiFocus(true, true);
 	SendNUIMessage({
 		action: "setVisible",
@@ -15,8 +15,8 @@ onNet("NW:ShowCharacterSelection", (characters: any[]) => {
 			visible: true,
 			route: "/characters/list",
 			data: {
-				characters: characters,
-			},
+				characters: characters
+			}
 		},
 	});
 });

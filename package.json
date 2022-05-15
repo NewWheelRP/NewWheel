@@ -12,7 +12,7 @@
 	"author": "New Wheel",
 	"license": "MIT",
 	"dependencies": {
-		"@nativewrappers/client": "^1.7.19",
+		"@nativewrappers/client": "^1.7.23",
 		"esbuild": "^0.14.38",
 		"lerna": "^4.0.0"
 	},

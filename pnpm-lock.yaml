@@ -3,14 +3,14 @@ lockfileVersion: 5.4
 specifiers:
   '@citizenfx/client': 2.0.5546-1
   '@citizenfx/server': 2.0.5546-1
-  '@nativewrappers/client': ^1.7.19
+  '@nativewrappers/client': ^1.7.23
   '@types/node': ^17.0.31
   esbuild: ^0.14.38
   lerna: ^4.0.0
   typescript: ^4.5.2
 
 dependencies:
-  '@nativewrappers/client': 1.7.19
+  '@nativewrappers/client': 1.7.23
   esbuild: 0.14.38
   lerna: 4.0.0
 
@@ -75,6 +75,7 @@ packages:
       pacote: 11.3.5
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: false
 
@@ -243,6 +244,7 @@ packages:
       whatwg-url: 8.7.0
       yargs-parser: 20.2.4
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: false
 
@@ -440,6 +442,7 @@ packages:
       npm-registry-fetch: 9.0.0
       npmlog: 4.1.2
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: false
 
@@ -469,6 +472,7 @@ packages:
       pify: 5.0.0
       read-package-json: 3.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: false
 
@@ -603,6 +607,7 @@ packages:
       pacote: 11.3.5
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - encoding
       - supports-color
     dev: false
@@ -748,8 +753,8 @@ packages:
       write-file-atomic: 3.0.3
     dev: false
 
-  /@nativewrappers/client/1.7.19:
-    resolution: {integrity: sha512-DFDOGyBWeDjHE32oQI31mDDRg2VTMBgcXy3wUmWVznCKnpBeDnaApci+oXZ+ucH3DwKppy9C0Y/sXZNkP/q59g==}
+  /@nativewrappers/client/1.7.23:
+    resolution: {integrity: sha512-ztKvnmu9aCtuNK2VTTaXO0fSWar7n1BhdWcvHrvwPJjm1a+eu5RL8wFGm0R4ZJ3Qks8nP5QgxVek9t2rHFGMUg==}
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
@@ -795,6 +800,8 @@ packages:
       promise-retry: 2.0.1
       semver: 7.3.7
       which: 2.0.2
+    transitivePeerDependencies:
+      - bluebird
     dev: false
 
   /@npmcli/installed-package-contents/1.0.7:
@@ -1192,6 +1199,8 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
+    transitivePeerDependencies:
+      - bluebird
     dev: false
 
   /call-bind/1.0.2:
@@ -2727,6 +2736,7 @@ packages:
       import-local: 3.1.0
       npmlog: 4.1.2
     transitivePeerDependencies:
+      - bluebird
       - encoding
       - supports-color
     dev: false
@@ -2740,6 +2750,7 @@ packages:
       npm-package-arg: 8.1.5
       npm-registry-fetch: 11.0.0
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: false
 
@@ -2753,6 +2764,7 @@ packages:
       semver: 7.3.7
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: false
 
@@ -2862,6 +2874,7 @@ packages:
       socks-proxy-agent: 5.0.1
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: false
 
@@ -2886,6 +2899,7 @@ packages:
       socks-proxy-agent: 6.2.0
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: false
 
@@ -3264,6 +3278,7 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: false
 
@@ -3280,6 +3295,7 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: false
 
@@ -3483,6 +3499,7 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: false
 
@@ -3607,6 +3624,11 @@ packages:
 
   /promise-inflight/1.0.1:
     resolution: {integrity: sha1-mEcocL8igTL8vdhoEputEsPAKeM=}
+    peerDependencies:
+      bluebird: '*'
+    peerDependenciesMeta:
+      bluebird:
+        optional: true
     dev: false
 
   /promise-retry/2.0.1:

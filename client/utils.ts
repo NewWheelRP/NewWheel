@@ -1,6 +1,6 @@
-import { Vector4 } from "../types";
+import { Vector4 } from "@nativewrappers/client";
 
-export const Delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+export const Delay = (ms: number): unknown => new Promise((res) => setTimeout(res, ms));
 
 export const NUIOff = () => {
 	SetNuiFocus(false, false);
@@ -12,14 +12,6 @@ export const NUIOff = () => {
 	});
 };
 
-export const toVector4 = (coords: number[], heading: number): Vector4 => {
-	const newVec: Vector4 = {
-		x: coords[0],
-		y: coords[1],
-		z: coords[2],
-		w: heading
-	};
-	return newVec;
-}
+export const toVector4 = (coords: number[], heading: number): Vector4 => new Vector4(coords[0], coords[1], coords[2], heading);
 
 export const roundByThousands = (num: number): number => Math.round(num * 1000) / 1000;

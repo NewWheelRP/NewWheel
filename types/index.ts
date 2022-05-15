@@ -1,9 +1,4 @@
-export type Vector4 = {
-	x: number;
-	y: number;
-	z: number;
-	w: number;
-};
+import { Vector4 } from "@nativewrappers/client";
 
 export type CharacterNewObject = {
 	firstName: string;
@@ -14,6 +9,29 @@ export type CharacterNewObject = {
 	nationality?: string;
 	backstory?: string;
 };
+
+export type PlayerDataObject = {
+	source: number,
+	license: string,
+	name: string,
+	groups: string | string[],
+	loggedIn: boolean,
+	firstLogin: number,
+	lastLogin: number,
+	playTime: number,
+	character?: CharacterDataObject,
+	sessionStartTime: number,
+	settings?: Map<string, any>
+}
+
+export interface PlayerDBObject {
+	license: string;
+	name: string;
+	groups: string | string[];
+	firstLogin: number;
+	lastLogin: number;
+	playTime: number;
+}
 
 export type CharacterDataObject = {
 	source: number,
@@ -30,16 +48,18 @@ export type CharacterDataObject = {
 	customObjects?: Map<string, any>
 }
 
-export type PlayerDataObject = {
-	source: number,
-	license: string,
-	name: string,
-	group: string,
-	loggedIn: boolean,
-	firstLogin: number,
-	lastLogin: number,
-	playTime: number,
-	character?: CharacterDataObject,
-	sessionStartTime: number,
-	settings?: Map<string, any>
+export interface CharacterDBObject {
+	source: number;
+	license: string;
+	firstName: string;
+	lastName: string;
+	coords: string;
+	citizenId?: string;
+	dob?: number;
+	height?: number;
+	sex?: string;
+	nationality?: string;
+	backstory?: string;
+	phone_number?: number;
+	bank?: number;
 }

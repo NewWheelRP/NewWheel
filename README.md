@@ -26,7 +26,7 @@ if you wish to use TypeScript in NUI, take a look at our other [boilerplate](htt
 ## Foreword
 
 Although there already is a well established TypeScript boilerplate,
-made by [d0p3t](https://github.com/d0p3t/fivem-ts-boilerplate) for the FiveM ecosystem, 
+made by [d0p3t](https://github.com/d0p3t/fivem-ts-boilerplate) for the FiveM ecosystem,
 he has unfortunately passed away, leaving it unmaintained. This boilerplate is simply
 a more up to date alternative.
 
@@ -35,7 +35,7 @@ a more up to date alternative.
 
 ## Getting Started
 
-First clone the repository or use the template option 
+First clone the repository or use the template option
 and place it within your `resources` folder
 
 **Install Dependencies**
@@ -51,7 +51,7 @@ npm i
 
 ### Hot Building
 
-While developing your resource, this boilerplate offers 
+While developing your resource, this boilerplate offers
 a `watch`script that will automatically hot rebuild on any
 change within the `client` or `server` directories.
 
@@ -75,8 +75,8 @@ the `build` script.
 npm run build
 ```
 ### Automatic Builds (Optional)
-*This is not recommended as the embedded version of yarn is 
-ocassionally prone to performance and environment problems. We 
+*This is not recommended as the embedded version of yarn is
+ocassionally prone to performance and environment problems. We
 highly recomend, you manually run the build script*
 
 If desired, the `fxmanifest.lua` can be setup to allow for

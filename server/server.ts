@@ -6,16 +6,17 @@ export const NW: NW = {
 	Players: new Map<number, PlayerClass>(),
 };
 
-import { Character, CharacterDBObject } from "./Classes/Character";
-import { Player as PlayerClass, PlayerDBObject } from "./Classes/Player";
+import { Character } from "./Classes/Character";
+import { Player as PlayerClass } from "./Classes/Player";
 import { getLicense } from "./utils";
 import { GetPlayerFromSource, SavePlayer, SavePlayers, OnFirstJoin } from "./functions";
 import "./listeners";
 import "./connecting";
 import "./functions";
+import { CharacterDataObject, PlayerDBObject, CharacterDBObject } from "../types";
 
 onNet("NW:LogoutPlayer", () => {
-	const player = GetPlayerFromSource(global.source);
+	const player: PlayerClass | undefined = GetPlayerFromSource(global.source);
 	if (!player) return;
 	SavePlayer(player);
 	emitNet("NW:PlayerLogout", global.source);
@@ -23,8 +24,8 @@ onNet("NW:LogoutPlayer", () => {
 });
 
 onNet("NW:PlayerJoined", () => {
-	const src = global.source;
-	const license = getLicense(src);
+	const src: number = global.source;
+	const license: string | undefined = getLicense(src);
 	if (!license) return;
 	global.exports.oxmysql.single(
 		"SELECT * FROM players WHERE license = ?",
@@ -34,7 +35,7 @@ onNet("NW:PlayerJoined", () => {
 				firstJoin(src, license);
 				return;
 			}
-			const player = PlayerClass.load(src, result);
+			const player: PlayerClass = PlayerClass.load(src, result);
 			NW.Players.set(src, player);
 			loadCharacters(src, license);
 		}
@@ -53,12 +54,12 @@ const loadCharacters = (source: number, license: string) => {
 };
 
 export const sendCharacters = (source: number, license: string, result?: CharacterDBObject[]) => {
-	const player = NW.Players.get(source);
+	const player: PlayerClass | undefined = NW.Players.get(source);
 	const chars: Character[] = [];
 
 	if (!player) return;
 
-	const newChars: any = [];
+	const newChars: CharacterDataObject[] = [];
 	if (result) {
 		result.forEach((v: CharacterDBObject) => {
 			const char = Character.load(source, license, v);

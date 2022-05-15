@@ -1,16 +1,17 @@
 import config from "../config.json";
+import { Game } from "@nativewrappers/client";
 
 setImmediate(() =>{
 	if (config.world.disableWantedLevel) {
-		ClearPlayerWantedLevel(PlayerPedId());
+		ClearPlayerWantedLevel(Game.PlayerPed.Handle);
 		SetMaxWantedLevel(0);
 	}
-	
+
 	if (config.world.enablePvP) {
-		SetCanAttackFriendly(PlayerPedId(), true, false);
+		SetCanAttackFriendly(Game.PlayerPed.Handle, true, false);
 		NetworkSetFriendlyFireOption(true);
 	}
-	
+
 	if (config.world.calmAI) {
 		SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_HILLBILLY"), GetHashKey("PLAYER"));
 		SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_BALLAS"), GetHashKey("PLAYER"));
@@ -26,6 +27,6 @@ setImmediate(() =>{
 		SetRelationshipBetweenGroups(1, GetHashKey("MEDIC"), GetHashKey("PLAYER"));
 		SetRelationshipBetweenGroups(1, GetHashKey("COP"), GetHashKey("PLAYER"));
 	}
-	
+
 	if (config.world.disableDistantSirens) DistantCopCarSirens(!config.world.disableDistantSirens);
 });

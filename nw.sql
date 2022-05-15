@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `characters` (
 CREATE TABLE IF NOT EXISTS `players` (
   `license` varchar(90) NOT NULL,
   `name` varchar(90) NOT NULL,
-  `groupName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'user',
+  `groups` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'user',
   `firstLogin` bigint NOT NULL DEFAULT '0',
   `lastLogin` bigint NOT NULL DEFAULT '0',
   `playTime` bigint DEFAULT NULL,

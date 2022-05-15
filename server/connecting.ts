@@ -11,7 +11,7 @@ on("playerConnecting", (name: string, _setKickReason: Function, deferrals: any) 
 		const identifierNum = GetNumPlayerIdentifiers(player);
 
 		for (let i = 0; i < identifierNum; i++) {
-			const identifier = GetPlayerIdentifier(player, i);
+			const identifier: string = GetPlayerIdentifier(player, i);
 			if (identifier.includes("license:")) license = identifier;
 		}
 
