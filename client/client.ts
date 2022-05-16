@@ -11,7 +11,7 @@ export const NW: NW = {
 		source: -1,
 		license: "placeholderLicense",
 		name: "placeholderName",
-		group: "placeholderGroup",
+		groups: "placeholderGroup",
 		loggedIn: false,
 		firstLogin: -1,
 		lastLogin: -1,
