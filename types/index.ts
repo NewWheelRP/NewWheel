@@ -1,14 +1,6 @@
 import { Vector4 } from "@nativewrappers/client";
 
-export type CharacterNewObject = {
-	firstName: string;
-	lastName: string;
-	dob?: number;
-	height?: number;
-	sex?: string;
-	nationality?: string;
-	backstory?: string;
-};
+// Player Types
 
 export type PlayerDataObject = {
 	source: number,
@@ -32,6 +24,8 @@ export interface PlayerDBObject {
 	lastLogin: number;
 	playTime: number;
 }
+
+// Character Types
 
 export type CharacterDataObject = {
 	source: number,
@@ -63,3 +57,29 @@ export interface CharacterDBObject {
 	phone_number?: number;
 	bank?: number;
 }
+
+export type CharacterNewObject = {
+	firstName: string;
+	lastName: string;
+	dob?: number;
+	height?: number;
+	sex?: string;
+	nationality?: string;
+	backstory?: string;
+}
+
+
+// JSON Types
+
+export type JSONValue =
+    | string
+    | number
+    | boolean
+    | JSONObject
+    | JSONArray;
+
+export interface JSONObject {
+    [x: string]: JSONValue;
+}
+
+export interface JSONArray extends Array<JSONValue> { }

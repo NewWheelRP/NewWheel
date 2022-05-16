@@ -1,6 +1,6 @@
 import * as config from "../../config.json";
 import { Character } from "./Character";
-import { PlayerDataObject, PlayerDBObject } from "../../types";
+import { PlayerDataObject, PlayerDBObject, JSONObject } from "../../types";
 
 export class Player {
 	private _source!: number;
@@ -107,7 +107,7 @@ export class Player {
 	public getGroups = (): string | string[] => this._groups;
 
 	public setGroups = (groups: string | string[]): void => {
-		const groupObj: any = config.player.groups; // workaround for error of indexing it directly
+		const groupObj: JSONObject = config.player.groups;
 
 		if (typeof groups === "string") {
 			if (groupObj[groups]) {
@@ -136,7 +136,7 @@ export class Player {
 	};
 
 	public addGroups = (groups: string | string[]): void => {
-		const groupObj: any = config.player.groups; // workaround for error of indexing it directly
+		const groupObj: any = config.player.groups;
 
 		if (typeof groups === "string") {
 			if (!groupObj[groups]) return console.error(`Group ${groups} does not exist!`);
@@ -172,7 +172,7 @@ export class Player {
 	};
 
 	public removeGroups = (groups: string | string[]): void => {
-		const groupObj: any = config.player.groups; // workaround for error of indexing it directly
+		const groupObj: any = config.player.groups;
 		if (typeof groups === "string") {
 			if (!groupObj[groups]) return console.error(`Group ${groups} does not exist!`);
 
