@@ -54,6 +54,14 @@ onNet("NW:UpdateCharCoords", (data: Vector4) => {
 on("playerDropped", (_reason: string) => {
 	const player: Player | undefined = GetPlayerFromSource(global.source);
 	if (!player) return;
+	const groups: string | string[] = player.getGroups();
+	if (Array.isArray(groups)) {
+		groups.forEach((group: string) => {
+			ExecuteCommand(`remove_principal identifier.${player.getLicense()} nw.${group}`);
+		});
+	} else {
+		ExecuteCommand(`remove_principal identifier.${player.getLicense()} nw.${groups}`);
+	}
 	SavePlayer(player, true);
 	emitNet("NW:PlayerLogout", global.source);
 });
