@@ -5,8 +5,6 @@
 	"main": "index.js",
 	"scripts": {
 		"build": "pnpm run build:root && lerna run build",
-		"start": "pnpm run watch && lerna run start",
-		"start:game": "pnpm run watch && lerna run start:game",
 		"build:root": "esbuild client/client.ts server/server.ts --bundle --platform=node --target=node16.9.1 --entry-names=[dir]/[hash].[name] --outdir=dist --define:process.env.NODE_ENV=\\\"production\\\"",
 		"watch": "esbuild client/client.ts server/server.ts --bundle --watch --platform=node --target=node16.9.1 --entry-names=[dir]/[hash].[name] --outdir=dist --define:process.env.NODE_ENV=\\\"development\\\"",
 		"bootstrap": "lerna bootstrap"
