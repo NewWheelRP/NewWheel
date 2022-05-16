@@ -6,7 +6,7 @@ interface NW {
 }
 
 // This consists of placeholders until the player has been created
-export const NW: NW = {
+const NW: NW = {
 	PlayerData: {
 		source: -1,
 		license: "placeholderLicense",
@@ -48,3 +48,5 @@ const playerJoiningTimeout = setTimeout(() => {
 setTimeout(() => {
 	SaveCoords();
 }, config.characters.coordsSaveTimeout);
+
+export default NW;

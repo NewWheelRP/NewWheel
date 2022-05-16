@@ -2,7 +2,7 @@ interface NW {
 	Players: Map<number, PlayerClass>;
 }
 
-export const NW: NW = {
+const NW: NW = {
 	Players: new Map<number, PlayerClass>(),
 };
 
@@ -83,3 +83,5 @@ const firstJoin = (source: number, license: string) => {
 setTimeout(() => {
 	SavePlayers();
 }, 300000);
+
+export default NW;

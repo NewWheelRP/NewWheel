@@ -1,6 +1,6 @@
 import { Character } from "./Classes/Character";
 import { Player } from "./Classes/Player";
-import { NW } from "./server";
+import NW from "./server";
 import * as config from "../config.json";
 import { CharacterNewObject, PlayerDataObject } from "../types";
 import { Vector4 } from "@nativewrappers/client";

@@ -1,4 +1,4 @@
-import { NW } from "./client";
+import NW from "./client";
 import { PlayerDataObject, CharacterDataObject } from "../types";
 import { Vector3 } from "@nativewrappers/client";
 import { Teleport } from "./functions";

@@ -1,6 +1,6 @@
 import { PlayerDataObject } from "../types";
 import { Player as PlayerClass } from "./Classes/Player";
-import { NW, sendCharacters } from "./server";
+import NW, { sendCharacters } from "./server";
 import { getLicense } from "./utils";
 
 export const OnFirstJoin = (source: number, license: string) => {

@@ -1,6 +1,6 @@
 import { Game, World, Vehicle, VehicleSeat, Model } from "@nativewrappers/client";
 import { Vector3 } from "@nativewrappers/client";
-import { NW } from "./client";
+import NW from "./client";
 import { SaveCoords } from "./functions";
 
 RegisterCommand("car", async (_source: number, args: string[]) => {

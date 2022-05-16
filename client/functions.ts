@@ -1,6 +1,6 @@
 import { Game, Vector3 } from "@nativewrappers/client";
 import { CharacterDataObject, PlayerDataObject } from "../types";
-import { NW } from "./client";
+import NW from "./client";
 import { roundByThousands, toVector4 } from "./utils";
 
 export const Teleport = (coords: Vector3, heading?: number): void => {

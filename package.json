@@ -5,8 +5,8 @@
 	"main": "index.js",
 	"scripts": {
 		"build": "pnpm run build:root && lerna run build",
-		"build:root": "esbuild client/client.ts server/server.ts --bundle --platform=node --target=node16.9.1 --entry-names=[dir]/[hash].[name] --outdir=dist --define:process.env.NODE_ENV=\\\"production\\\"",
-		"watch": "esbuild client/client.ts server/server.ts --bundle --watch --platform=node --target=node16.9.1 --entry-names=[dir]/[hash].[name] --outdir=dist --define:process.env.NODE_ENV=\\\"development\\\"",
+		"build:root": "esbuild client/client.ts server/server.ts --bundle --platform=node --target=node16.9.1 --format=iife --entry-names=[dir]/[hash].[name] --outdir=dist --define:process.env.NODE_ENV=\\\"production\\\"",
+		"watch": "esbuild client/client.ts server/server.ts --bundle --watch --platform=node --target=node16.9.1 --format=iife --entry-names=[dir]/[hash].[name] --outdir=dist --define:process.env.NODE_ENV=\\\"development\\\"",
 		"bootstrap": "lerna bootstrap"
 	},
 	"author": "New Wheel",
