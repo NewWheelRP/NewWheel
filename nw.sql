@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `characters` (
   `dob` bigint NOT NULL DEFAULT '0',
   `height` int NOT NULL DEFAULT '0',
   `sex` varchar(15) NOT NULL,
-  `bank` bigint NOT NULL DEFAULT `0`
+  `bank` bigint NOT NULL DEFAULT '0',
   `nationality` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `backstory` text CHARACTER SET utf8 COLLATE utf8_general_ci,
   `coords` text,
