@@ -35,46 +35,37 @@ const NewCharacter: React.FC = () => {
 	} = useForm<NewChar>();
 	const onSubmit: SubmitHandler<NewChar> = (data) => {
 		fetchNui<any>("createCharacter", data)
-			.then((retData) => {})
-			.catch((e) => {
+			.then((_) => {})
+			.catch((_) => {
 				console.error("Something went wrong with setting the character");
 			});
 	};
-
 	return (
 		<div className="bg-slate-800 p-10">
 			<h1 className="font-bold text-4xl text-white mb-2">Character Creation</h1>
 			<div className="flex mr-2 py-6 w-full">
 				<form onSubmit={handleSubmit(onSubmit)} className="w-full grid grid-cols-2 gap-4">
 					<InputForm
-						random={{
-							...register("firstName", { required: true, maxLength: 20, pattern: /^[A-Za-z]+$/i }),
-						}}
+						random={register("firstName", { required: true, maxLength: 20, pattern: /^[A-Za-z]+$/i })}
 						type="text"
-						label="First name:"
+						label="First Name"
 						errors={errors.firstName}
 					/>
 					<InputForm
-						random={{
-							...register("lastName", { required: true, maxLength: 20, pattern: /^[A-Za-z]+$/i }),
-						}}
+						random={register("lastName", { required: true, maxLength: 20, pattern: /^[A-Za-z]+$/i })}
 						type="text"
-						label="Last name:"
+						label="Last Name"
 						errors={errors.lastName}
 					/>
 					<DateForm
-						random={{
-							...register("dob", { required: true }),
-						}}
+						random={register("dob", { required: true })}
 						errors={errors.dob}
-						label="Date of Birth:"
+						label="Date of Birth"
 					/>
 					<SelectForm
-						random={{
-							...register("sex"),
-						}}
+						random={register("sex")}
 						errors={errors.sex}
-						label="Sex:"
+						label="Sex"
 						options={[
 							{ label: "Male", value: "MALE" },
 							{ label: "Female", value: "FEMALE" },
@@ -82,19 +73,15 @@ const NewCharacter: React.FC = () => {
 						]}
 					/>
 					<InputForm
-						random={{
-							...register("height", { required: true, min: 120, max: 220 }),
-						}}
+						random={register("height", { required: true, min: 120, max: 220 })}
 						type="number"
-						label="Height:"
+						label="Height"
 						errors={errors.height}
 					/>
 					<SelectForm
-						random={{
-							...register("nationality"),
-						}}
+						random={register("nationality")}
 						errors={errors.nationality}
-						label="Nationality:"
+						label="Nationality"
 						options={[
 							{ label: "San Andreas", value: "SAN_ANDREAS" },
 							{ label: "Paleto Bay", value: "PALETO_BAY" },

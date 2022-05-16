@@ -38,9 +38,6 @@ export class Character {
 
 	static new = (source: number, license: string, data: CharacterNewObject): Character => {
 		const character = new Character(source, license);
-		let phoneNumber = 0;
-		if (config.characters.phone === "npwd") phoneNumber = global.exports["npwd"].generatePhoneNumber();
-
 		character.setFirstName(data.firstName);
 		character.setLastName(data.lastName);
 		character.setCoords(Character.defaultCoords);
@@ -50,9 +47,8 @@ export class Character {
 		if (data.sex) character.setSex(data.sex);
 		if (data.nationality) character.setNationality(data.nationality);
 		if (data.backstory) character.setBackstory(data.backstory);
-		if (phoneNumber !== 0) character.setPhoneNumber(phoneNumber);
 		global.exports.oxmysql.insert(
-			"INSERT INTO characters (citizenId, license, firstName, lastName, dob, height, sex, nationality, backstory, coords, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			"INSERT INTO characters (citizenId, license, firstName, lastName, dob, height, sex, bank, nationality, backstory, coords, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			[
 				character.getCitizenId(),
 				character.getLicense(),
@@ -61,11 +57,16 @@ export class Character {
 				character.getDOB(),
 				character.getHeight(),
 				character.getSex(),
+				character.getBank(),
 				character.getNationality(),
 				character.getBackstory(),
 				JSON.stringify(character.getCoords()),
 				character.getPhoneNumber(),
-			]
+			], async () => {
+				setImmediate(async () => {
+					character.setPhoneNumber(await global.exports.npwd.generatePhoneNumber());
+				});
+			}
 		);
 		return character;
 	};
@@ -77,17 +78,17 @@ export class Character {
 
 	public save = (): void => {
 		const inventory = global.exports["ox_inventory"].Inventory(this._source);
-		console.log(JSON.stringify(inventory.items));
 
 		setImmediate(async () => {
-			const affectedRows = global.exports.oxmysql.update_async(
-				"UPDATE characters SET firstName = ?, lastName = ?, dob = ?, height = ?, sex = ? , nationality = ? , backstory = ? , coords = ?, inventory = ?, phone_number = ? WHERE citizenId = ? ",
+			const affectedRows = await global.exports.oxmysql.update_async(
+				"UPDATE characters SET firstName = ?, lastName = ?, dob = ?, height = ?, sex = ?, bank = ?, nationality = ?, backstory = ?, coords = ?, inventory = ?, phoneNumber = ? WHERE citizenId = ?",
 				[
 					this._firstName,
 					this._lastName,
 					this._DOB,
 					this._height,
 					this._sex,
+					this._bank,
 					this._nationality,
 					this._backstory,
 					JSON.stringify(this._coords),
@@ -300,7 +301,7 @@ export class Character {
 
 	public loadPhone = (): void => {
 		if (config.characters.phone === "npwd") {
-			global.exports["npwd"].newPlayer({
+			global.exports.npwd.newPlayer({
 				source: this._source,
 				identifier: this._citizenId,
 				phoneNumber: this._phoneNumber,

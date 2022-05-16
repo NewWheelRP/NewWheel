@@ -1,13 +1,13 @@
 {
 	"compilerOptions": {
-		"target": "ES2021",
+		"target": "ESNext",
 		"strict": true,
 		"strictPropertyInitialization": false,
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		"module": "CommonJS",
 		"types": ["@citizenfx/server", "@types/node"],
-		"lib": ["ES2021"],
+		"lib": ["ESNext"],
 		"resolveJsonModule": true
 	},
 	"include": ["./**/*"],

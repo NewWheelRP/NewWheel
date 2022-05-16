@@ -1,21 +1,22 @@
+import React from "react";
 import RequiredError from "./RequiredError";
 
-interface InputFormProps {
+interface SelectFormProps {
 	label: string;
 	random: any;
 	errors: any;
 	options: any[];
 }
 
-const SelectForm = (props: InputFormProps) => {
+const SelectForm: React.FC<SelectFormProps> = (props: SelectFormProps) => {
 	return (
-		<label className="text-slate-100 bg-slate-600 p-4 rounded">
+		<label className={`text-slate-100 bg-slate-600 p-4 rounded h-fit min-h-full ${props.errors?.type === "required" && "mb-4"}`}>
 			<span className="block mb-2">{props.label}</span>
 			<select
 				name="test"
-				{...props.random}
 				// value={props.value || ""}
 				className="p-2 rounded w-full text-slate-900 bg-slate-400"
+				{...props.random}
 			>
 				{props.options.map((option) => {
 					return (

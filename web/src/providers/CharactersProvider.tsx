@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import type { Character } from "../types";
 
 interface ContextValue {
@@ -20,5 +20,4 @@ const CharactersProvider: React.FC<{ children: JSX.Element | JSX.Element[] }> = 
 
 export default CharactersProvider;
 
-export const useCharacters = () =>
-	React.useContext<ContextValue>(CharactersCtx as React.Context<ContextValue>);
+export const useCharacters = () => React.useContext<ContextValue>(CharactersCtx as React.Context<ContextValue>);

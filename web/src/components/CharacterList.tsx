@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import { fetchNui } from "../utils/fetchNui";
 import { Link } from "react-router-dom";
