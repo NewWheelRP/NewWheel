@@ -1,3 +1,5 @@
+import React from "react";
+
 type Props = {
 	children: JSX.Element | JSX.Element[];
 	visible: boolean;

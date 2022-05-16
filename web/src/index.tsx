@@ -18,18 +18,18 @@ library.add(fas, far);
 const root = createRoot(document.getElementById('root')!);
 
 root.render(
-	// <React.StrictMode>
-	<BrowserRouter>
-		<CharactersProvider>
-			<VisibilityProvider>
-				<Routes>
-					<Route path="/characters" element={<App />}>
-						<Route path="list" element={<CharacterList />} />
-						<Route path="new" element={<NewCharacter />} />
-					</Route>
-				</Routes>
-			</VisibilityProvider>
-		</CharactersProvider>
-	</BrowserRouter>
-	// </React.StrictMode>
+	<React.StrictMode>
+		<BrowserRouter>
+			<CharactersProvider>
+				<VisibilityProvider>
+					<Routes>
+						<Route path="/characters" element={<App />}>
+							<Route path="list" element={<CharacterList />} />
+							<Route path="new" element={<NewCharacter />} />
+						</Route>
+					</Routes>
+				</VisibilityProvider>
+			</CharactersProvider>
+		</BrowserRouter>
+	</React.StrictMode>
 );
