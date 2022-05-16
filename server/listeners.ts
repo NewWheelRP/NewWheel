@@ -17,7 +17,7 @@ onNet("NW:SetCurrentChar", (id: string) => {
 	if (!char) return;
 	player.setCurrentCharacter(char);
 	const clientObject: PlayerDataObject = player.toClientObject();
-	emit("NW:CharacterChosen", source);
+	emit("NW:CharacterChosen", source, char.getCitizenId());
 	UpdatePlayerDataClient(clientObject);
 	emitNet("NW:PlayerLoaded", source, clientObject);
 	emitNet("NW:Spawn", source, char.getCoords());
