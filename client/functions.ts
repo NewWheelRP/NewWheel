@@ -1,5 +1,5 @@
 import { Game, Vector3 } from "@nativewrappers/client";
-import { PlayerDataObject } from "../types";
+import { CharacterDataObject, PlayerDataObject } from "../types";
 import { NW } from "./client";
 import { roundByThousands, toVector4 } from "./utils";
 
@@ -26,3 +26,7 @@ global.exports("SaveCoords", SaveCoords);
 export const GetPlayerData = (): PlayerDataObject => NW.PlayerData;
 
 global.exports("GetPlayerData", GetPlayerData);
+
+export const GetCurrentCharacterData = (): CharacterDataObject => NW.CharacterData;
+
+global.exports("GetCurrentCharacterData", GetCurrentCharacterData);
