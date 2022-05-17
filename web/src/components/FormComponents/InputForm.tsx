@@ -1,10 +1,11 @@
 import React from "react";
 import RequiredError from "./RequiredError";
+import { UseFormRegisterReturn, FieldError } from "react-hook-form";
 
 interface InputFormProps {
 	label: string;
-	random: any;
-	errors: any;
+	random: UseFormRegisterReturn;
+	errors: FieldError | undefined;
 	type: string;
 }
 

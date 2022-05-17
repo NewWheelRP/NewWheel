@@ -12,7 +12,6 @@ const NW: NW = {
 		license: "placeholderLicense",
 		name: "placeholderName",
 		groups: "placeholderGroup",
-		loggedIn: false,
 		firstLogin: -1,
 		lastLogin: -1,
 		playTime: -1,
@@ -21,6 +20,7 @@ const NW: NW = {
 	CharacterData: {
 		source: -1,
 		license: "placeholderLicense",
+		loggedIn: false,
 		firstName: "placeholderFirstName",
 		lastName: "placeholderLastName",
 		coords: undefined,

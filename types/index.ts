@@ -7,7 +7,6 @@ export type PlayerDataObject = {
 	license: string,
 	name: string,
 	groups: string | string[],
-	loggedIn: boolean,
 	firstLogin: number,
 	lastLogin: number,
 	playTime: number,
@@ -30,6 +29,7 @@ export interface PlayerDBObject {
 export type CharacterDataObject = {
 	source: number,
 	license: string,
+	loggedIn: boolean,
 	citizenId?: string,
 	firstName: string,
 	lastName: string,

@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `characters` (
   `backstory` text CHARACTER SET utf8 COLLATE utf8_general_ci,
   `coords` text,
   `phoneNumber` varchar(50) NOT NULL,
+  `inventory` longtext NOT NULL DEFAULT '{}',
   PRIMARY KEY (`citizenId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 

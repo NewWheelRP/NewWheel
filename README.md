@@ -44,7 +44,7 @@ Navigate into the newly cloned folder and execute
 the following command, to install dependencies.
 
 ```sh
-npm i
+pnpm i
 ```
 
 ## Development
@@ -56,7 +56,7 @@ a `watch`script that will automatically hot rebuild on any
 change within the `client` or `server` directories.
 
 ```sh
-npm run watch
+pnpm run watch
 ```
 *This script still requires you restart the resource for the
 changes to be reflected in-game*
@@ -72,26 +72,7 @@ you must create an optimized & minimized production build, using
 the `build` script.
 
 ```sh
-npm run build
-```
-### Automatic Builds (Optional)
-*This is not recommended as the embedded version of yarn is
-ocassionally prone to performance and environment problems. We
-highly recomend, you manually run the build script*
-
-If desired, the `fxmanifest.lua` can be setup to allow for
-FXServer to automatically build on resource start. This utilizes
-the embedded `yarn` & `webpack` default resources.
-
-To enable this, add the following to your `fxmanifest.lua`
-
-```lua
-dependency {
-    'yarn',
-    'webpack'
-}
-
-webpack_config 'webpack.config.js'
+pnpm run build
 ```
 
 ### Additional Notes

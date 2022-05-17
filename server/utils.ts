@@ -9,6 +9,8 @@ export const getLicense = (player: number): string | undefined => {
 	}
 };
 
+global.exports("GetLicense", getLicense);
+
 export const generateUUIDv4 = (): string => Crypto.uuidv4();
 
 global.exports("generateUUIDv4", generateUUIDv4);

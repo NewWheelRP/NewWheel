@@ -18,8 +18,9 @@ import { CharacterDataObject, PlayerDBObject, CharacterDBObject } from "../types
 onNet("NW:LogoutPlayer", () => {
 	const player: PlayerClass | undefined = GetPlayerFromSource(global.source);
 	if (!player) return;
+	player.getCurrentCharacter().setLoggedIn(false); // No need to update the client here already as the next line does that already
 	SavePlayer(player);
-	emitNet("NW:PlayerLogout", global.source);
+	emitNet("NW:PlayerLogout", global.source, player.toClientObject());
 	loadCharacters(global.source, player.getLicense());
 });
 
@@ -37,6 +38,7 @@ onNet("NW:PlayerJoined", () => {
 			}
 			const player: PlayerClass = PlayerClass.load(src, result);
 			NW.Players.set(src, player);
+
 			loadCharacters(src, license);
 		}
 	);

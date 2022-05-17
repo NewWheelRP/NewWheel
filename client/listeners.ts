@@ -8,22 +8,29 @@ onNet("NW:Spawn", (coords: Vector3) => {
 });
 
 onNet("NW:ShowCharacterSelection", (characters: CharacterDataObject[]) => {
-	SetNuiFocus(true, true);
-	SendNUIMessage({
-		action: "setVisible",
-		data: {
-			visible: true,
-			route: "/characters/list",
+	setTimeout(() => {
+		SetNuiFocus(true, true);
+		SendNUIMessage({
+			action: "setVisible",
 			data: {
-				characters: characters
-			}
-		},
-	});
+				visible: true,
+				route: "/characters/list",
+				data: {
+					characters: characters
+				}
+			},
+		});
+	}, 3000);
 });
 
-onNet("NW:SetPlayerData", (playerData: PlayerDataObject, characterData: CharacterDataObject | undefined) => {
-	if (GetInvokingResource() !== GetCurrentResourceName()) return;
+onNet("NW:SetPlayerData", (playerData: PlayerDataObject) => {
+	const invokingResource: string | null = GetInvokingResource();
+	if (invokingResource && invokingResource !== GetCurrentResourceName()) return;
 	NW.PlayerData = playerData;
-	if (characterData) NW.CharacterData = characterData;
-	else if (playerData.character) NW.CharacterData = playerData.character;
+});
+
+onNet("NW:SetCharacterData", (characterData: CharacterDataObject) => {
+	const invokingResource: string | null = GetInvokingResource();
+	if (invokingResource && invokingResource !== GetCurrentResourceName()) return;
+	NW.CharacterData = characterData;
 });

@@ -79,6 +79,6 @@ RegisterCommand("tpw", async () => {
 }, false);
 
 RegisterCommand("logout", async () => {
-	if (!NW.PlayerData.loggedIn) return;
+	if (!NW.CharacterData.loggedIn) return;
 	emitNet("NW:LogoutPlayer");
 }, false);

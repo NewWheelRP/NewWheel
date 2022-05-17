@@ -4,7 +4,7 @@ import NW from "./server";
 import * as config from "../config.json";
 import { CharacterNewObject, PlayerDataObject } from "../types";
 import { Vector4 } from "@nativewrappers/client";
-import { GetPlayerFromSource, SavePlayer, SavePlayers, UpdatePlayerDataClient } from "./functions";
+import { GetPlayerFromSource, SavePlayer, SavePlayers, UpdateCharacterDataClient, UpdatePlayerDataClient } from "./functions";
 
 onNet("NW:SetCurrentChar", (id: string) => {
 	const source: number = global.source;
@@ -19,6 +19,7 @@ onNet("NW:SetCurrentChar", (id: string) => {
 	const clientObject: PlayerDataObject = player.toClientObject();
 	emit("NW:CharacterChosen", source, char.getCitizenId());
 	UpdatePlayerDataClient(clientObject);
+	UpdateCharacterDataClient(char.toClientObject());
 	emitNet("NW:PlayerLoaded", source, clientObject);
 	emitNet("NW:Spawn", source, char.getCoords());
 });
@@ -34,6 +35,7 @@ onNet("NW:CreateNewCharacter", (data: CharacterNewObject) => {
 	const clientObject: PlayerDataObject = player.toClientObject();
 	emit("NW:CharacterChosen", source);
 	UpdatePlayerDataClient(clientObject);
+	UpdateCharacterDataClient(character.toClientObject());
 	emitNet("NW:PlayerLoaded", source, clientObject);
 	emitNet("NW:Spawn", source, character.getCoords());
 });
@@ -48,10 +50,10 @@ onNet("NW:UpdateCharCoords", (data: Vector4) => {
 	const player: Player | undefined = GetPlayerFromSource(source);
 	if (!player) return;
 	const character: Character = player.getCurrentCharacter();
-	if (character) character.setCoords(data);
+	if (character) character.setCoords(data, true);
 });
 
-on("playerDropped", (_reason: string) => {
+on("playerDropped", () => {
 	const player: Player | undefined = GetPlayerFromSource(global.source);
 	if (!player) return;
 	const groups: string | string[] = player.getGroups();

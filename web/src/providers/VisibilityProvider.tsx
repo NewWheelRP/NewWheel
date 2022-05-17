@@ -15,14 +15,12 @@ interface VisibilityProviderValue {
 // apply a CSS visibility value. If this is non-performant, this should be customized.
 export const VisibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const [visible, setVisible] = useState(false);
-	const [route, setRoute] = useState(String);
 	const characters = useCharacters();
 	const navigate = useNavigate();
 
 	const handleVisibility = (data: NuiData) => {
 		setVisible(data.visible);
 		if (data.route) {
-			setRoute(data.route);
 			navigate(data.route, { replace: true });
 		}
 		if (data.data) {

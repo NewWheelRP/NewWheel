@@ -1,7 +1,6 @@
-import { PlayerDataObject } from "../types";
+import { CharacterDataObject, PlayerDataObject } from "../types";
 import { Player as PlayerClass } from "./Classes/Player";
 import NW, { sendCharacters } from "./server";
-import { getLicense } from "./utils";
 
 export const OnFirstJoin = (source: number, license: string) => {
 	const player = PlayerClass.new(source, license);
@@ -24,14 +23,13 @@ export const OnFirstJoin = (source: number, license: string) => {
 			player.getPlayTime(),
 		],
 		() => {
+			UpdatePlayerDataClient(player.toClientObject());
 			sendCharacters(source, license, []);
 		}
 	);
 };
 
 global.exports("OnFirstJoin", OnFirstJoin);
-
-global.exports("GetLicense", getLicense);
 
 export const GetPlayerFromSource = (source: number): PlayerClass | undefined => NW.Players.get(source);
 
@@ -61,14 +59,32 @@ export const SavePlayer = (player: PlayerClass | number, playerLeft?: boolean) =
 
 	if (!player2 || !(player2 instanceof PlayerClass)) return;
 
-	player2.save();
+	player2.save(true);
 
 	if (playerLeft) NW.Players.delete(player2.getSource());
 };
 
 global.exports("SavePlayer", SavePlayer);
 
-export const UpdatePlayerDataClient = (data: PlayerDataObject) => {
+export const UpdatePlayerDataClient = (data?: PlayerDataObject, source?: number) => {
+	if (!data && source) {
+		const player = GetPlayerFromSource(source);
+		if (!player) return;
+		data = player.toClientObject();
+	}
+	if (!data) return;
 	emitNet("NW:SetPlayerData", data.source, data);
 	Player(data.source).state.set("playerDataUpdatedAt", new Date().getTime(), true);
+};
+
+export const UpdateCharacterDataClient = (data?: CharacterDataObject, source?: number, citizenId?: string) => {
+	if (!data && source) {
+		const player = GetPlayerFromSource(source);
+		if (!player) return;
+		const character = player.getCurrentCharacter();
+		if (character.getCitizenId() === citizenId) data = character.toClientObject();
+	}
+	if (!data) return;
+	emitNet("NW:SetCharacterData", data.source, data);
+	Player(data.source).state.set("characterDataUpdatedAt", new Date().getTime(), true);
 };

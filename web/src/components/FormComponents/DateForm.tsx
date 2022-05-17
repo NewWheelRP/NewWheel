@@ -1,10 +1,11 @@
 import React from "react";
 import RequiredError from "./RequiredError";
+import { UseFormRegisterReturn, FieldError } from "react-hook-form";
 
 interface DateFormProps {
 	label: string;
-	random: any;
-	errors: any;
+	random: UseFormRegisterReturn;
+	errors: FieldError | undefined;
 }
 
 const DateForm: React.FC<DateFormProps> = (props: DateFormProps) => {

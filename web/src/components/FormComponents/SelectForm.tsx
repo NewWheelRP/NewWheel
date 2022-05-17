@@ -1,11 +1,12 @@
 import React from "react";
 import RequiredError from "./RequiredError";
+import { UseFormRegisterReturn, FieldError } from "react-hook-form";
 
 interface SelectFormProps {
 	label: string;
-	random: any;
-	errors: any;
-	options: any[];
+	random: UseFormRegisterReturn;
+	errors: FieldError | undefined;
+	options: {[key: string]: string}[];
 }
 
 const SelectForm: React.FC<SelectFormProps> = (props: SelectFormProps) => {
@@ -13,7 +14,6 @@ const SelectForm: React.FC<SelectFormProps> = (props: SelectFormProps) => {
 		<label className={`text-slate-100 bg-slate-600 p-4 rounded h-fit min-h-full ${props.errors?.type === "required" && "mb-4"}`}>
 			<span className="block mb-2">{props.label}</span>
 			<select
-				name="test"
 				// value={props.value || ""}
 				className="p-2 rounded w-full text-slate-900 bg-slate-400"
 				{...props.random}
