@@ -27,10 +27,12 @@ onNet("NW:SetPlayerData", (playerData: PlayerDataObject) => {
 	const invokingResource: string | null = GetInvokingResource();
 	if (invokingResource && invokingResource !== GetCurrentResourceName()) return;
 	NW.PlayerData = playerData;
+	emit("NW:PlayerDataUpdated", playerData);
 });
 
 onNet("NW:SetCharacterData", (characterData: CharacterDataObject) => {
 	const invokingResource: string | null = GetInvokingResource();
 	if (invokingResource && invokingResource !== GetCurrentResourceName()) return;
 	NW.CharacterData = characterData;
+	emit("NW:CharacterDataUpdated", characterData);
 });

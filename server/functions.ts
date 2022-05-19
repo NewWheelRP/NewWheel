@@ -1,9 +1,9 @@
 import { CharacterDataObject, PlayerDataObject } from "../types";
-import { Player as PlayerClass } from "./Classes/Player";
+import { Player } from "./Classes/Player";
 import NW, { sendCharacters } from "./server";
 
 export const OnFirstJoin = (source: number, license: string) => {
-	const player = PlayerClass.new(source, license);
+	const player = Player.new(source, license);
 	NW.Players.set(source, player);
 
 	let groups: string | string[] = player.getGroups();
@@ -31,12 +31,12 @@ export const OnFirstJoin = (source: number, license: string) => {
 
 global.exports("OnFirstJoin", OnFirstJoin);
 
-export const GetPlayerFromSource = (source: number): PlayerClass | undefined => NW.Players.get(source);
+export const GetPlayerFromSource = (source: number): Player | undefined => NW.Players.get(source);
 
 global.exports("GetPlayerFromSource", GetPlayerFromSource);
 
-export const GetPlayerFromLicense = (license: string): PlayerClass | undefined => {
-	NW.Players.forEach((player: PlayerClass) => {
+export const GetPlayerFromLicense = (license: string): Player | undefined => {
+	NW.Players.forEach((player: Player) => {
 		if (player.getLicense() === license) return player;
 	})
 	return;
@@ -46,18 +46,18 @@ global.exports("GetPlayerFromLicense", GetPlayerFromLicense);
 
 export const SavePlayers = () => {
 	console.info("Saving all players...");
-	NW.Players.forEach((player: PlayerClass) => SavePlayer(player));
+	NW.Players.forEach((player: Player) => SavePlayer(player));
 };
 
 global.exports("SavePlayers", SavePlayers);
 
-export const SavePlayer = (player: PlayerClass | number, playerLeft?: boolean) => {
-	let player2: PlayerClass | undefined;
+export const SavePlayer = (player: Player | number, playerLeft?: boolean) => {
+	let player2: Player | undefined;
 
-	if (player instanceof PlayerClass) player2 = player;
+	if (player instanceof Player) player2 = player;
 	else player2 = GetPlayerFromSource(player);
 
-	if (!player2 || !(player2 instanceof PlayerClass)) return;
+	if (!player2 || !(player2 instanceof Player)) return;
 
 	player2.save(true);
 
@@ -74,7 +74,6 @@ export const UpdatePlayerDataClient = (data?: PlayerDataObject, source?: number)
 	}
 	if (!data) return;
 	emitNet("NW:SetPlayerData", data.source, data);
-	Player(data.source).state.set("playerDataUpdatedAt", new Date().getTime(), true);
 };
 
 export const UpdateCharacterDataClient = (data?: CharacterDataObject, source?: number, citizenId?: string) => {
@@ -86,5 +85,4 @@ export const UpdateCharacterDataClient = (data?: CharacterDataObject, source?: n
 	}
 	if (!data) return;
 	emitNet("NW:SetCharacterData", data.source, data);
-	Player(data.source).state.set("characterDataUpdatedAt", new Date().getTime(), true);
 };

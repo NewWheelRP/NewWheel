@@ -1,13 +1,13 @@
 interface NW {
-	Players: Map<number, PlayerClass>;
+	Players: Map<number, Player>;
 }
 
 const NW: NW = {
-	Players: new Map<number, PlayerClass>(),
+	Players: new Map<number, Player>(),
 };
 
 import { Character } from "./Classes/Character";
-import { Player as PlayerClass } from "./Classes/Player";
+import { Player } from "./Classes/Player";
 import { getLicense } from "./utils";
 import { GetPlayerFromSource, SavePlayer, SavePlayers, OnFirstJoin } from "./functions";
 import "./listeners";
@@ -16,7 +16,7 @@ import "./functions";
 import { CharacterDataObject, PlayerDBObject, CharacterDBObject } from "../types";
 
 onNet("NW:LogoutPlayer", () => {
-	const player: PlayerClass | undefined = GetPlayerFromSource(global.source);
+	const player: Player | undefined = GetPlayerFromSource(global.source);
 	if (!player) return;
 	player.getCurrentCharacter().setLoggedIn(false); // No need to update the client here already as the next line does that already
 	SavePlayer(player);
@@ -36,13 +36,12 @@ onNet("NW:PlayerJoined", () => {
 				firstJoin(src, license);
 				return;
 			}
-			const player: PlayerClass = PlayerClass.load(src, result);
+			const player: Player = Player.load(src, result);
 			NW.Players.set(src, player);
 
 			loadCharacters(src, license);
 		}
 	);
-	Player(src).state.set("playerDataUpdatedAt", 0, true);
 });
 
 const loadCharacters = (source: number, license: string) => {
@@ -56,7 +55,7 @@ const loadCharacters = (source: number, license: string) => {
 };
 
 export const sendCharacters = (source: number, license: string, result?: CharacterDBObject[]) => {
-	const player: PlayerClass | undefined = NW.Players.get(source);
+	const player: Player | undefined = NW.Players.get(source);
 	const chars: Character[] = [];
 
 	if (!player) return;
