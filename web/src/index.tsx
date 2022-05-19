@@ -19,7 +19,7 @@ const root = createRoot(document.getElementById('root')!);
 
 root.render(
 	<React.StrictMode>
-		<HashRouter basename={`${(window as any).GetParentResourceName()}/web/build/index.html`}>
+		<HashRouter>
 			<CharactersProvider>
 				<VisibilityProvider>
 					<Routes>
