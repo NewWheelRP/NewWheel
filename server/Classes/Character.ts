@@ -109,7 +109,7 @@ export class Character {
 
 		// Save every custom object, each custom object should implement its own save logic
 		this._customObjects.forEach((obj: any) => {
-			obj.save();
+			obj?.save();
 		});
 	};
 
@@ -241,8 +241,16 @@ export class Character {
 		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
 	};
 
-	public addObject = (key: string, value: any): void => {
+	public setObject = (key: string, value: any, updateClientData?: boolean): void => {
 		this._customObjects.set(key, value);
+
+		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+	};
+
+	public removeObject = (key: string, updateClientData?: boolean): void => {
+		this._customObjects.delete(key);
+
+		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
 	};
 
 	public getObject = (key: string): any => this._customObjects.get(key);

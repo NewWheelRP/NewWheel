@@ -62,6 +62,11 @@ export class Player {
 
 		// Save current character aswell
 		if (this._currentChar) this._currentChar.save(playerLeft);
+
+			// Save every setting, each setting should implement its own save logic
+			this._settings.forEach((setting: any) => {
+				setting?.save();
+			});
 	};
 
 	public toClientObject = (): PlayerDataObject => {
@@ -346,6 +351,12 @@ export class Player {
 
 	public setSetting = (key: string, value: any, updateClientData?: boolean): void => {
 		this._settings.set(key, value);
+
+		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+	};
+
+	public removeSetting = (key: string, updateClientData?: boolean): void => {
+		this._settings.delete(key);
 
 		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
 	};
