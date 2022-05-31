@@ -27,6 +27,6 @@ export const GetPlayerData = (): PlayerDataObject => NW.PlayerData;
 
 global.exports("GetPlayerData", GetPlayerData);
 
-export const GetCurrentCharacterData = (): CharacterDataObject => NW.CharacterData;
+export const GetCharacterData = (): CharacterDataObject => NW.CharacterData;
 
-global.exports("GetCurrentCharacterData", GetCurrentCharacterData);
+global.exports("GetCharacterData", GetCharacterData);
