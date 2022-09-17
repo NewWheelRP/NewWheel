@@ -3,7 +3,7 @@ import { Player } from "./Classes/Player";
 import NW, { sendCharacters } from "./server";
 
 export const OnFirstJoin = (source: number, license: string) => {
-	const player = Player.new(source, license);
+	const player = new Player(source, license, true);
 	NW.Players.set(source, player);
 
 	let groups: string | string[] = player.getGroups();

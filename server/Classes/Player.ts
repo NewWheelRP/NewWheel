@@ -16,32 +16,23 @@ export class Player {
 	private _sessionStartTime: number;
 	private _settings: Map<string, any> = new Map();
 
-	constructor(source: number, license: string) {
+	constructor(source: number, license: string, newPlayer: boolean, data?: PlayerDBObject) {
 		this._source = source;
 		this._license = license;
-		const curDate = new Date();
-		this._sessionStartTime = curDate.getTime();
-	}
-
-	static load(source: number, data: PlayerDBObject): Player {
-		const player = new Player(source, data.license);
-		player.setName(GetPlayerName(source));
-		player.setGroups(data.groups);
-		player.setFirstLogin(data.firstLogin);
-		player.setLastLogin(data.lastLogin);
-		player.setPlayTime(data.playTime);
-		return player;
-	}
-
-	static new(source: number, license: string): Player {
-		const player = new Player(source, license);
-		player.setName(GetPlayerName(source));
-		player.setGroups(config.player.defaultGroup);
-		const curDate = new Date();
-		player.setFirstLogin(curDate.getTime());
-		player.setLastLogin(curDate.getTime());
-		player.setPlayTime(0);
-		return player;
+		const curTime = new Date().getTime();
+		this._sessionStartTime = curTime;
+		this.setName(GetPlayerName(source));
+		if (!newPlayer && data) {
+			this.setGroups(data.groups);
+			this.setFirstLogin(data.firstLogin);
+			this.setLastLogin(curTime);
+			this.setPlayTime(data.playTime);
+		} else {
+			this.setGroups(config.player.defaultGroup);
+			this.setFirstLogin(curTime);
+			this.setLastLogin(curTime);
+			this.setPlayTime(0);
+		}
 	}
 
 	public save = (playerLeft?: boolean): void => {

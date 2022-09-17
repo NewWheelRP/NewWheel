@@ -36,16 +36,16 @@ import * as config from "./../config.json";
 import { Game } from "@nativewrappers/client";
 import { SaveCoords } from "./functions";
 
-const playerJoiningTimeout = setTimeout(() => {
+const playerJoining = setInterval(() => {
 	if (NetworkIsPlayerActive(Game.Player.Handle)) {
 		global.exports.spawnmanager.setAutoSpawn(true);
 		DoScreenFadeOut(0);
 		emitNet("NW:PlayerJoined");
-		clearTimeout(playerJoiningTimeout);
+		clearTimeout(playerJoining);
 	}
 }, 500);
 
-setTimeout(() => {
+setInterval(() => {
 	SaveCoords();
 }, config.characters.coordsSaveTimeout);
 

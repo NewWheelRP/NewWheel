@@ -36,7 +36,7 @@ onNet("NW:PlayerJoined", () => {
 				firstJoin(src, license);
 				return;
 			}
-			const player: Player = Player.load(src, result);
+			const player: Player = new Player(src, license, false, result);
 			NW.Players.set(src, player);
 
 			loadCharacters(src, license);
@@ -81,7 +81,7 @@ const firstJoin = (source: number, license: string) => {
 	// Intro to server
 };
 
-setTimeout(() => {
+setInterval(() => {
 	SavePlayers();
 }, 300000);
 
