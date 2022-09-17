@@ -74,6 +74,7 @@ export const UpdatePlayerDataClient = (data?: PlayerDataObject, source?: number)
 	}
 	if (!data) return;
 	emitNet("NW:SetPlayerData", data.source, data);
+	emit("NW:PlayerDataUpdated", data.source, data);
 };
 
 export const UpdateCharacterDataClient = (data?: CharacterDataObject, source?: number, citizenId?: string) => {
@@ -85,4 +86,5 @@ export const UpdateCharacterDataClient = (data?: CharacterDataObject, source?: n
 	}
 	if (!data) return;
 	emitNet("NW:SetCharacterData", data.source, data);
+	emit("NW:CharacterDataUpdated", data.source, data);
 };
