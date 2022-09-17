@@ -15,6 +15,11 @@ import "./connecting";
 import "./functions";
 import { CharacterDataObject, PlayerDBObject, CharacterDBObject } from "../types";
 
+// because why not
+if (GetResourceState("spawnmanager") !== "missing" || GetResourceState("spawnmanager") !== "stopped" || GetResourceState("spawnmanager") !== "stopping") {
+	StopResource("spawnmanager");
+}
+
 onNet("NW:LogoutPlayer", () => {
 	const player: Player | undefined = GetPlayerFromSource(global.source);
 	if (!player) return;
