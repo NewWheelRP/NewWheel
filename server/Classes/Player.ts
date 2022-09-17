@@ -111,7 +111,7 @@ export class Player {
 			if (groupObj[groups]) {
 				this._groups = groups;
 
-				ExecuteCommand(`add_principal identifier.${this._license} nw.${groups}`);
+				ExecuteCommand(`add_principal player.${this._source} nw.${groups}`);
 			}
 
 			else return console.error(`Group ${groups} does not exist!`);
@@ -122,7 +122,7 @@ export class Player {
 				if (groupObj[group]) {
 					tempGroups.push(group);
 
-					ExecuteCommand(`add_principal identifier.${this._license} nw.${group}`);
+					ExecuteCommand(`add_principal player.${this._source} nw.${group}`);
 				}
 				else console.error(`Group ${group} does not exist!`);
 			});
@@ -146,11 +146,11 @@ export class Player {
 
 				this._groups = [currentGroup, groups];
 
-				ExecuteCommand(`add_principal identifier.${this._license} nw.${groups}`);
+				ExecuteCommand(`add_principal player.${this._source} nw.${groups}`);
 			} else {
 				this._groups.push(groups);
 
-				ExecuteCommand(`add_principal identifier.${this._license} nw.${groups}`);
+				ExecuteCommand(`add_principal player.${this._source} nw.${groups}`);
 			}
 		} else {
 			groups.forEach((group: string) => {
@@ -160,11 +160,11 @@ export class Player {
 
 						this._groups = [currentGroup, group];
 
-						ExecuteCommand(`add_principal identifier.${this._license} nw.${group}`);
+						ExecuteCommand(`add_principal player.${this._source} nw.${group}`);
 					} else {
 						this._groups.push(group);
 
-						ExecuteCommand(`add_principal identifier.${this._license} nw.${group}`);
+						ExecuteCommand(`add_principal player.${this._source} nw.${group}`);
 					}
 				} else console.error(`Group ${group} does not exist!`);
 			});
@@ -182,11 +182,11 @@ export class Player {
 			else this._groups.filter((group: string) => {
 				if (group !== groups) return group;
 
-				ExecuteCommand(`remove_principal identifier.${this._license} nw.${groups}`);
+				ExecuteCommand(`remove_principal player.${this._source} nw.${groups}`);
 			});
 		} else {
 			if (typeof this._groups === "string") {
-				ExecuteCommand(`remove_principal identifier.${this._license} nw.${this._groups}`);
+				ExecuteCommand(`remove_principal player.${this._source} nw.${this._groups}`);
 
 				this._groups = config.player.defaultGroup;
 			}
@@ -197,7 +197,7 @@ export class Player {
 					if (Array.isArray(this._groups)) this._groups.filter((_group: string) => {
 						if (_group !== group) return _group;
 
-						ExecuteCommand(`remove_principal identifier.${this._license} nw.${group}`);
+						ExecuteCommand(`remove_principal player.${this._source} nw.${group}`);
 					});
 				});
 			}

@@ -59,10 +59,10 @@ on("playerDropped", () => {
 	const groups: string | string[] = player.getGroups();
 	if (Array.isArray(groups)) {
 		groups.forEach((group: string) => {
-			ExecuteCommand(`remove_principal identifier.${player.getLicense()} nw.${group}`);
+			ExecuteCommand(`remove_principal player.${player.getSource()} nw.${group}`);
 		});
 	} else {
-		ExecuteCommand(`remove_principal identifier.${player.getLicense()} nw.${groups}`);
+		ExecuteCommand(`remove_principal player.${player.getSource()} nw.${groups}`);
 	}
 	SavePlayer(player, true);
 	emitNet("NW:PlayerLogout", global.source);
