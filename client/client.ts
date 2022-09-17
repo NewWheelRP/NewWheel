@@ -94,6 +94,7 @@ setInterval(() => {
 			}
 
 			ShutdownLoadingScreen();
+			ShutdownLoadingScreenNui();
 			if (IsScreenFadedOut()) {
 				DoScreenFadeIn(500);
 				while (true) {
