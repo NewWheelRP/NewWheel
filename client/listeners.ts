@@ -28,6 +28,7 @@ onNet("NW:SetPlayerData", (playerData: PlayerDataObject) => {
 	if (invokingResource && invokingResource !== GetCurrentResourceName()) return;
 	NW.PlayerData = playerData;
 	emit("NW:PlayerDataUpdated", playerData);
+	emitNet("NW:PlayerDataUpdated", playerData)
 });
 
 onNet("NW:SetCharacterData", (characterData: CharacterDataObject) => {
@@ -35,4 +36,5 @@ onNet("NW:SetCharacterData", (characterData: CharacterDataObject) => {
 	if (invokingResource && invokingResource !== GetCurrentResourceName()) return;
 	NW.CharacterData = characterData;
 	emit("NW:CharacterDataUpdated", characterData);
+	emitNet("NW:CharacterDataUpdated", characterData);
 });
