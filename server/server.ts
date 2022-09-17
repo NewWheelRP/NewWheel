@@ -26,6 +26,7 @@ onNet("NW:LogoutPlayer", () => {
 	player.getCurrentCharacter().setLoggedIn(false); // No need to update the client here already as the next line does that already
 	SavePlayer(player);
 	emitNet("NW:PlayerLogout", global.source, player.toClientObject());
+	emit("NW:PlayerLogout", global.source, player.toClientObject);
 	loadCharacters(global.source, player.getLicense());
 });
 

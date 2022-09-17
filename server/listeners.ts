@@ -65,7 +65,6 @@ on("playerDropped", () => {
 		ExecuteCommand(`remove_principal player.${player.getSource()} nw.${groups}`);
 	}
 	SavePlayer(player, true);
-	emitNet("NW:PlayerLogout", global.source);
 });
 
 onNet("NW:SaveAll", () => {
@@ -74,8 +73,7 @@ onNet("NW:SaveAll", () => {
 
 on("onResourceStop", (resource: string) => {
 	if (resource === "NewWheel") {
-		SavePlayers();
-		emitNet("NW:PlayerLogout", -1);
+		SavePlayers(true);
 	} else if (resource === config.characters.inventory) {
 		SavePlayers();
 	}

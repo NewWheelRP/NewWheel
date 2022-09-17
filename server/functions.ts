@@ -44,9 +44,9 @@ export const GetPlayerFromLicense = (license: string): Player | undefined => {
 
 global.exports("GetPlayerFromLicense", GetPlayerFromLicense);
 
-export const SavePlayers = () => {
+export const SavePlayers = (playersLeft?: boolean) => {
 	console.info("Saving all players...");
-	NW.Players.forEach((player: Player) => SavePlayer(player));
+	NW.Players.forEach((player: Player) => SavePlayer(player, playersLeft));
 };
 
 global.exports("SavePlayers", SavePlayers);
@@ -61,7 +61,11 @@ export const SavePlayer = (player: Player | number, playerLeft?: boolean) => {
 
 	player2.save(true);
 
-	if (playerLeft) NW.Players.delete(player2.getSource());
+	if (playerLeft) {
+		emitNet("NW:PlayerLogout", player2.getSource(), player2.toClientObject());
+		emit("NW:PlayerLogout", player2.getSource(), player2.toClientObject());
+		NW.Players.delete(player2.getSource());
+	}
 };
 
 global.exports("SavePlayer", SavePlayer);
