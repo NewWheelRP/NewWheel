@@ -5,9 +5,9 @@
 	"main": "index.js",
 	"scripts": {
 		"build": "pnpm run build:root && lerna run build",
-		"build:root": "esbuild client/client.ts server/server.ts --bundle --allow-overwrite --platform=node --target=node16.9.1 --format=iife --entry-names=[dir]/[name] --outdir=dist --define:process.env.NODE_ENV=\\\"production\\\"",
+		"build:root": "esbuild client/client.ts server/server.ts shared/shared.ts --bundle --allow-overwrite --platform=node --target=node16.9.1 --format=iife --entry-names=[dir]/[name] --outdir=dist --define:process.env.NODE_ENV=\\\"production\\\"",
 		"build:web": "lerna run build",
-		"watch": "esbuild client/client.ts server/server.ts --bundle --watch --allow-overwrite --platform=node --target=node16.9.1 --format=iife --entry-names=[dir]/[name] --outdir=dist --define:process.env.NODE_ENV=\\\"development\\\"",
+		"watch": "esbuild client/client.ts server/server.ts shared/shared.ts --bundle --watch --allow-overwrite --platform=node --target=node16.9.1 --format=iife --entry-names=[dir]/[name] --outdir=dist --define:process.env.NODE_ENV=\\\"development\\\"",
 		"watch:web": "lerna run start",
 		"watch:web:game": "lerna run start:game",
 		"bootstrap": "lerna bootstrap"

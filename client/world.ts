@@ -1,4 +1,5 @@
 import config from "../config.json";
+import { joaat } from "../shared/utils";
 
 setImmediate(() =>{
 	const playerPed: number = PlayerPedId();
@@ -13,19 +14,19 @@ setImmediate(() =>{
 	}
 
 	if (config.world.calmAI) {
-		SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_HILLBILLY"), GetHashKey("PLAYER"));
-		SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_BALLAS"), GetHashKey("PLAYER"));
-		SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_MEXICAN"), GetHashKey("PLAYER"));
-		SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_FAMILY"), GetHashKey("PLAYER"));
-		SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_MARABUNTE"), GetHashKey("PLAYER"));
-		SetRelationshipBetweenGroups(1, GetHashKey("AMBIENT_GANG_SALVA"), GetHashKey("PLAYER"));
-		SetRelationshipBetweenGroups(1, GetHashKey("GANG_1"), GetHashKey("PLAYER"));
-		SetRelationshipBetweenGroups(1, GetHashKey("GANG_2"), GetHashKey("PLAYER"));
-		SetRelationshipBetweenGroups(1, GetHashKey("GANG_9"), GetHashKey("PLAYER"));
-		SetRelationshipBetweenGroups(1, GetHashKey("GANG_10"), GetHashKey("PLAYER"));
-		SetRelationshipBetweenGroups(1, GetHashKey("FIREMAN"), GetHashKey("PLAYER"));
-		SetRelationshipBetweenGroups(1, GetHashKey("MEDIC"), GetHashKey("PLAYER"));
-		SetRelationshipBetweenGroups(1, GetHashKey("COP"), GetHashKey("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("AMBIENT_GANG_HILLBILLY"), joaat("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("AMBIENT_GANG_BALLAS"), joaat("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("AMBIENT_GANG_MEXICAN"), joaat("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("AMBIENT_GANG_FAMILY"), joaat("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("AMBIENT_GANG_MARABUNTE"), joaat("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("AMBIENT_GANG_SALVA"), joaat("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("GANG_1"), joaat("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("GANG_2"), joaat("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("GANG_9"), joaat("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("GANG_10"), joaat("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("FIREMAN"), joaat("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("MEDIC"), joaat("PLAYER"));
+		SetRelationshipBetweenGroups(1, joaat("COP"), joaat("PLAYER"));
 	}
 
 	if (config.world.disableDistantSirens) DistantCopCarSirens(!config.world.disableDistantSirens);

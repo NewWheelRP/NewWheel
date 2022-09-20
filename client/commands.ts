@@ -1,7 +1,8 @@
 import { Vector3 } from "@nativewrappers/client";
 import NW from "./client";
 import { SaveCoords } from "./functions";
-import { Delay, getClosestVehicle } from "./utils";
+import { getClosestVehicle } from "./utils";
+import { Delay, joaat } from "../shared/utils";
 
 RegisterCommand("car", async (_source: number, args: string[]) => {
 	if (args.length < 1) {
@@ -9,7 +10,7 @@ RegisterCommand("car", async (_source: number, args: string[]) => {
 		return;
 	}
 
-	const hash: number = GetHashKey(args[0]);
+	const hash: number = joaat(args[0]);
 
 	if (!IsModelInCdimage(hash) || !IsModelValid(hash)) {
 		console.error(`Vehicle ${args[0]} doesn't exist`);
@@ -25,7 +26,7 @@ RegisterCommand("car", async (_source: number, args: string[]) => {
 
 	const playerPed: number = PlayerPedId();
 	const coords: number[] = GetEntityCoords(playerPed, true);
-	const vehicle: number = CreateVehicle(GetHashKey(args[0]), coords[0], coords[1], coords[2], GetEntityHeading(playerPed), true, false);
+	const vehicle: number = CreateVehicle(joaat(args[0]), coords[0], coords[1], coords[2], GetEntityHeading(playerPed), true, false);
 
 	if (vehicle === 0) {
 		console.error("This vehicle does not exist");

@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"strict": true,
+		"strictPropertyInitialization": false,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"module": "CommonJS",
+		"types": ["@citizenfx/client", "@citizenfx/server", "@types/node"],
+		"lib": ["ESNext"],
+		"resolveJsonModule": true
+	},
+	"include": ["./**/*"],
+	"exclude": ["**/node_modules", "**/__tests__/*"]
+}

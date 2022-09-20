@@ -35,11 +35,12 @@ import "./listeners";
 import * as config from "./../config.json";
 import { Vector4 } from "@nativewrappers/client";
 import { SaveCoords } from "./functions";
+import { joaat } from "../shared/utils";
 
 let joined: boolean = false;
 let spawning: boolean = false;
 let diedAt: number = -1;
-const defaultPedHash: number = GetHashKey(config.characters.defaultPed);
+const defaultPedHash: number = joaat(config.characters.defaultPed);
 const defaultCoords: Vector4 = new Vector4(config.characters.defaultCoords.x, config.characters.defaultCoords.y, config.characters.defaultCoords.z, config.characters.defaultCoords.w);
 export const playerId: number = PlayerId();
 
