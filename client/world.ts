@@ -1,14 +1,14 @@
 import config from "../config.json";
-import { Game } from "@nativewrappers/client";
 
 setImmediate(() =>{
+	const playerPed: number = PlayerPedId();
 	if (config.world.disableWantedLevel) {
-		ClearPlayerWantedLevel(Game.PlayerPed.Handle);
+		ClearPlayerWantedLevel(playerPed);
 		SetMaxWantedLevel(0);
 	}
 
 	if (config.world.enablePvP) {
-		SetCanAttackFriendly(Game.PlayerPed.Handle, true, false);
+		SetCanAttackFriendly(playerPed, true, false);
 		NetworkSetFriendlyFireOption(true);
 	}
 

@@ -41,7 +41,7 @@ let spawning: boolean = false;
 let diedAt: number = -1;
 const defaultPedHash: number = GetHashKey(config.characters.defaultPed);
 const defaultCoords: Vector4 = new Vector4(config.characters.defaultCoords.x, config.characters.defaultCoords.y, config.characters.defaultCoords.z, config.characters.defaultCoords.w);
-let playerId: number = PlayerId();
+export const playerId: number = PlayerId();
 
 // casually borrowing from spawnmanager
 setInterval(() => {

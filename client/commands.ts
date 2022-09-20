@@ -1,7 +1,7 @@
-import { Game, World, Vehicle, VehicleSeat, Model } from "@nativewrappers/client";
 import { Vector3 } from "@nativewrappers/client";
 import NW from "./client";
 import { SaveCoords } from "./functions";
+import { Delay, getClosestVehicle } from "./utils";
 
 RegisterCommand("car", async (_source: number, args: string[]) => {
 	if (args.length < 1) {
@@ -9,24 +9,36 @@ RegisterCommand("car", async (_source: number, args: string[]) => {
 		return;
 	}
 
-	const coords: number[] = GetEntityCoords(Game.PlayerPed.Handle, true);
-	const vehicle: Vehicle | null = await World.createVehicle(
-		new Model(args[0]),
-		new Vector3(coords[0], coords[1], coords[2]),
-		GetEntityHeading(Game.PlayerPed.Handle),
-		true
-	);
+	const hash: number = GetHashKey(args[0]);
 
-	if (!vehicle) {
+	if (!IsModelInCdimage(hash) || !IsModelValid(hash)) {
+		console.error(`Vehicle ${args[0]} doesn't exist`);
+		return;
+	}
+
+	if (!HasModelLoaded(hash)) {
+		RequestModel(hash);
+		while (!HasModelLoaded(hash)) {
+			Delay(10);
+		}
+	}
+
+	const playerPed: number = PlayerPedId();
+	const coords: number[] = GetEntityCoords(playerPed, true);
+	const vehicle: number = CreateVehicle(GetHashKey(args[0]), coords[0], coords[1], coords[2], GetEntityHeading(playerPed), true, false);
+
+	if (vehicle === 0) {
 		console.error("This vehicle does not exist");
 		return;
 	}
 
-	Game.PlayerPed.setIntoVehicle(vehicle, VehicleSeat.Driver);
+	SetPedIntoVehicle(playerPed, vehicle, -1);
 }, false);
 
 RegisterCommand("repairveh", async () => {
-	Game.PlayerPed.CurrentVehicle?.repair();
+	const veh: number = GetVehiclePedIsIn(PlayerPedId(), false);
+	if (veh === 0) return;
+	SetVehicleFixed(veh);
 }, false);
 
 RegisterCommand("saveall", async () => {
@@ -35,13 +47,19 @@ RegisterCommand("saveall", async () => {
 }, false);
 
 RegisterCommand("dv", async () => {
-	const veh: Vehicle | null = Game.PlayerPed.CurrentVehicle;
-	if (veh) veh.delete();
-	else {
-		const pcoords = GetEntityCoords(Game.PlayerPed.Handle, true);
+	const playerPed: number = PlayerPedId();
+	const veh: number = GetVehiclePedIsIn(playerPed, false);
+	if (veh !== 0) {
+		SetEntityAsMissionEntity(veh, true, true);
+		DeleteVehicle(veh);
+	} else {
+		const pcoords = GetEntityCoords(playerPed, true);
 		const coords = new Vector3(pcoords[0], pcoords[1], pcoords[2]);
-		const veh = World.getClosestVehicle(coords);
-		if (veh) veh.delete();
+		const veh: number = getClosestVehicle(coords);
+		if (veh !== 0) {
+			SetEntityAsMissionEntity(veh, true, true);
+			DeleteVehicle(veh);
+		}
 	}
 }, false);
 
@@ -55,28 +73,33 @@ RegisterCommand("tp", async (_source: number, args: string[]) => {
 	const y: number = parseInt(args[1]);
 	const z: number = parseInt(args[2]);
 
-	SetEntityCoords(Game.PlayerPed.Handle, x, y, z, true, false, false, false);
+	SetEntityCoords(PlayerPedId(), x, y, z, true, false, false, false);
 }, false);
 
-RegisterCommand("tpw", async () => {
+const TPW = async () => {
 	const waypoint: number = GetFirstBlipInfoId(8);
 	if (!waypoint) {
 		console.error("There was no waypoint set");
 		return;
 	}
 
+	const playerPed: number = PlayerPedId();
+
 	DoScreenFadeOut(10);
 
 	const coords: number[] = GetBlipInfoIdCoord(waypoint);
 
-	SetEntityCoords(Game.PlayerPed.Handle, coords[0], coords[1], coords[2], true, false, false, false);
+	SetEntityCoords(playerPed, coords[0], coords[1], coords[2], true, false, false, false);
 
 	const newCoord: [boolean, number, number[]] = GetGroundZAndNormalFor_3dCoord(coords[0], coords[1], coords[2]);
 
-	SetEntityCoords(Game.PlayerPed.Handle, coords[0], coords[1], newCoord[1], true, false, false, false);
+	SetEntityCoords(playerPed, coords[0], coords[1], newCoord[1], true, false, false, false);
 
 	DoScreenFadeIn(100);
-}, false);
+}
+
+RegisterCommand("tpw", TPW, false);
+RegisterCommand("tpm", TPW, false);
 
 RegisterCommand("logout", async () => {
 	if (!NW.CharacterData.loggedIn) return;

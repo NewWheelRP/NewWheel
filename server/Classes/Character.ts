@@ -1,8 +1,8 @@
 import { CharacterDataObject, CharacterNewObject, CharacterDBObject } from "../../types";
 import { Vector4 } from "@nativewrappers/client";
 import config from "../../config.json";
-import { Crypto } from "@nativewrappers/client";
 import { UpdateCharacterDataClient } from "../functions";
+import { generateUUIDv4 } from "../utils";
 
 export class Character {
 	private static defaultCoords: Vector4 = new Vector4(config.characters.defaultCoords.x, config.characters.defaultCoords.y, config.characters.defaultCoords.z, config.characters.defaultCoords.w);
@@ -45,7 +45,7 @@ export class Character {
 		character.setLastName(data.lastName);
 		character.setLoggedIn(true);
 		character.setCoords(Character.defaultCoords);
-		character.setCitizenId(Crypto.uuidv4());
+		character.setCitizenId(generateUUIDv4());
 		if (data.dob) character.setDOB(new Date(data.dob).getTime());
 		if (data.height) character.setHeight(data.height);
 		if (data.sex) character.setSex(data.sex);

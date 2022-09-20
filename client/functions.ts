@@ -1,10 +1,10 @@
-import { Game, Vector3 } from "@nativewrappers/client";
+import { Vector3 } from "@nativewrappers/client";
 import { CharacterDataObject, PlayerDataObject } from "../types";
 import NW from "./client";
 import { roundByThousands, toVector4 } from "./utils";
 
 export const Teleport = (coords: Vector3, heading?: number): void => {
-	const ped: number = Game.PlayerPed.Handle;
+	const ped: number = PlayerPedId();
 	SetEntityCoords(ped, coords.x, coords.y, coords.z, true, false, false, false);
 	SetEntityHeading(ped, heading ?? 90.0);
 }
@@ -12,7 +12,7 @@ export const Teleport = (coords: Vector3, heading?: number): void => {
 global.exports("Teleport", Teleport);
 
 export const SaveCoords = (): void => {
-	const ped: number = Game.PlayerPed.Handle;
+	const ped: number = PlayerPedId();
 	const coords: number[] = GetEntityCoords(ped, true);
 	coords[0] = roundByThousands(coords[0]);
 	coords[1] = roundByThousands(coords[1]);
