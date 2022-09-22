@@ -2,3 +2,5 @@ node_modules
 .vscode
 .idea
 dist
+pnpm-lock.yaml
+yarn.lock
