@@ -1,6 +1,6 @@
 interface NW {
 	Players: Map<number, Player>;
-}
+};
 
 const NW: NW = {
 	Players: new Map<number, Player>(),
@@ -81,7 +81,6 @@ export const sendCharacters = (source: number, license: string, result?: Charact
 };
 
 const firstJoin = (source: number, license: string) => {
-	// Create player
 	OnFirstJoin(source, license);
 	// Welcome screen
 	// Intro to server

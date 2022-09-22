@@ -3,7 +3,7 @@ import { PlayerDataObject, CharacterDataObject } from "../types";
 interface NW {
 	PlayerData: PlayerDataObject,
 	CharacterData: CharacterDataObject
-}
+};
 
 // This consists of placeholders until the player has been created
 const NW: NW = {

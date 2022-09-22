@@ -20,11 +20,11 @@ export const OnFirstJoin = (source: number, license: string) => {
 			groups,
 			player.getFirstLogin(),
 			player.getLastLogin(),
-			player.getPlayTime(),
+			player.getPlayTime()
 		],
 		() => {
 			UpdatePlayerDataClient(player.toClientObject());
-			sendCharacters(source, license, []);
+			sendCharacters(source, license);
 		}
 	);
 };

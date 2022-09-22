@@ -69,7 +69,7 @@ export class Player {
 			firstLogin: this._firstLogin,
 			lastLogin: this._lastLogin,
 			playTime: this._playTime,
-			character: this._currentChar.toClientObject(),
+			character: this._currentChar ? this._currentChar.toClientObject() : undefined,
 			sessionStartTime: this._sessionStartTime,
 			settings: this._settings
 		};
