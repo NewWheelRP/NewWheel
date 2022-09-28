@@ -16,13 +16,13 @@
 	"license": "MIT",
 	"dependencies": {
 		"@nativewrappers/client": "^1.7.26",
-		"esbuild": "^0.15.8",
-		"lerna": "^5.5.2"
+		"esbuild": "^0.15.9",
+		"lerna": "^5.5.4"
 	},
 	"devDependencies": {
-		"@citizenfx/client": "^2.0.5893-1",
-		"@citizenfx/server": "^2.0.5893-1",
-		"@types/node": "^18.7.18",
-		"typescript": "^4.8.3"
+		"@citizenfx/client": "^2.0.5906-1",
+		"@citizenfx/server": "^2.0.5906-1",
+		"@types/node": "^18.7.23",
+		"typescript": "^4.8.4"
 	}
 }
