@@ -1,5 +1,7 @@
 {
     "version": "0.0.1",
     "npmClient": "pnpm",
-    "packages": ["web"]
+    "packages": ["web"],
+    "useNx": true,
+    "useWorkspaces": true
 }
