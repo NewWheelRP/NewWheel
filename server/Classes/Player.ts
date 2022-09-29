@@ -46,7 +46,7 @@ export class Player {
 				[this._name, this._groups, curTime, this._playTime, this._license]
 			);
 
-			if (!playerLeft) UpdatePlayerDataClient(this.toClientObject());
+			if (!playerLeft) UpdatePlayerDataClient(this._source);
 
 			if (affectedRows) console.log(`Player: ${this._name} was saved!`);
 		});
@@ -99,7 +99,7 @@ export class Player {
 	public setName = (theName: string, updateClientData?: boolean): void => {
 		this._name = theName;
 
-		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+		if (updateClientData) UpdatePlayerDataClient(this._source);
 	};
 
 	public getGroups = (): string | string[] => this._groups;
@@ -132,7 +132,7 @@ export class Player {
 			this._groups = tempGroups;
 		}
 
-		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+		if (updateClientData) UpdatePlayerDataClient(this._source);
 	};
 
 	public addGroups = (groups: string | string[], updateClientData?: boolean): void => {
@@ -170,7 +170,7 @@ export class Player {
 			});
 		}
 
-		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+		if (updateClientData) UpdatePlayerDataClient(this._source);
 	};
 
 	public removeGroups = (groups: string | string[], updateClientData?: boolean): void => {
@@ -203,7 +203,7 @@ export class Player {
 			}
 		}
 
-		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+		if (updateClientData) UpdatePlayerDataClient(this._source);
 	};
 
 	public getFirstLogin = (): number => this._firstLogin;
@@ -211,7 +211,7 @@ export class Player {
 	public setFirstLogin = (login: number, updateClientData?: boolean): void => {
 		this._firstLogin = login;
 
-		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+		if (updateClientData) UpdatePlayerDataClient(this._source);
 	};
 
 	public getLastLogin = (): number => this._lastLogin;
@@ -219,7 +219,7 @@ export class Player {
 	public setLastLogin = (login: number, updateClientData?: boolean): void => {
 		this._lastLogin = login;
 
-		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+		if (updateClientData) UpdatePlayerDataClient(this._source);
 	};
 
 	public getPlayTime = (): number => this._playTime;
@@ -227,20 +227,20 @@ export class Player {
 	public setPlayTime = (time: number, updateClientData?: boolean): void => {
 		this._playTime = time;
 
-		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+		if (updateClientData) UpdatePlayerDataClient(this._source);
 	};
 
 	public setCharacters = (characters: Character[], updateClientData?: boolean): void => {
 		if (!characters) return;
 		characters.map((character) => this._characters.set(character.getCitizenId(), character));
 
-		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+		if (updateClientData) UpdatePlayerDataClient(this._source);
 	};
 
 	public setCharacter = (character: Character, updateClientData?: boolean): void => {
 		this._characters.set(character.getCitizenId(), character);
 
-		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+		if (updateClientData) UpdatePlayerDataClient(this._source);
 	};
 
 	public getCharacter = (citizenId: string): Character | undefined  => this._characters.get(citizenId);
@@ -254,8 +254,8 @@ export class Player {
 		this.setCurrentCharacter(newChar);
 
 		if (updateClientData) {
-			UpdatePlayerDataClient(this.toClientObject());
-			UpdateCharacterDataClient(this._currentChar.toClientObject());
+			UpdatePlayerDataClient(this._source);
+			UpdateCharacterDataClient(this._source, this._currentChar.getCitizenId());
 		}
 
 		// Do some camera stuff to make switching characters look cool
@@ -264,6 +264,7 @@ export class Player {
 	private _extraTables: {[key: string]: string} = { // extra tables to delete the player from
 
 	};
+
 	private _npwdTables: {[key: string]: string} = { // tables from npwd to delete the player from
 		"npwd_calls": "identifier",
 		"npwd_marketplace_listings": "identifier",
@@ -308,8 +309,8 @@ export class Player {
 			char.loadPhone();
 
 			if (updateClientData) {
-				UpdatePlayerDataClient(this.toClientObject());
-				UpdateCharacterDataClient(this._currentChar.toClientObject());
+				UpdatePlayerDataClient(this._source);
+				UpdateCharacterDataClient(this._source, this._currentChar.getCitizenId());
 			}
 
 			return;
@@ -324,8 +325,8 @@ export class Player {
 		newChar.loadPhone();
 
 		if (updateClientData) {
-			UpdatePlayerDataClient(this.toClientObject());
-			UpdateCharacterDataClient(this._currentChar.toClientObject());
+			UpdatePlayerDataClient(this._source);
+			UpdateCharacterDataClient(this._source, this._currentChar.getCitizenId());
 		}
 
 	};
@@ -335,7 +336,7 @@ export class Player {
 	public setSessionStartTime = (time: number, updateClientData?: boolean): void => {
 		this._sessionStartTime = time;
 
-		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+		if (updateClientData) UpdatePlayerDataClient(this._source);
 	};
 
 	public getSetting = (key: string): any => this._settings.get(key);
@@ -343,12 +344,12 @@ export class Player {
 	public setSetting = (key: string, value: any, updateClientData?: boolean): void => {
 		this._settings.set(key, value);
 
-		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+		if (updateClientData) UpdatePlayerDataClient(this._source);
 	};
 
 	public removeSetting = (key: string, updateClientData?: boolean): void => {
 		this._settings.delete(key);
 
-		if (updateClientData) UpdatePlayerDataClient(this.toClientObject());
+		if (updateClientData) UpdatePlayerDataClient(this._source);
 	};
 }

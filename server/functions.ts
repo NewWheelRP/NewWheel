@@ -1,6 +1,9 @@
 import { CharacterDataObject, PlayerDataObject } from "../types";
 import { Player } from "./Classes/Player";
 import NW, { sendCharacters } from "./server";
+import { Delay } from "../shared/utils";
+
+let delayOn: boolean = false;
 
 export const OnFirstJoin = (source: number, license: string) => {
 	const player = new Player(source, license, true);
@@ -23,7 +26,7 @@ export const OnFirstJoin = (source: number, license: string) => {
 			player.getPlayTime()
 		],
 		() => {
-			UpdatePlayerDataClient(player.toClientObject());
+			UpdatePlayerDataClient(source);
 			sendCharacters(source, license);
 		}
 	);
@@ -70,25 +73,41 @@ export const SavePlayer = (player: Player | number, playerLeft?: boolean) => {
 
 global.exports("SavePlayer", SavePlayer);
 
-export const UpdatePlayerDataClient = (data?: PlayerDataObject, source?: number) => {
-	if (!data && source) {
-		const player = GetPlayerFromSource(source);
-		if (!player) return;
-		data = player.toClientObject();
-	}
+export const UpdatePlayerDataClient = (source: number) => {
+	if (delayOn) return;
+	delayOn = true;
+	Delay(200);
+
+	let data: undefined | PlayerDataObject;
+
+	const player = GetPlayerFromSource(source);
+	if (!player) return;
+	data = player.toClientObject();
+
 	if (!data) return;
-	emitNet("NW:SetPlayerData", data.source, data);
-	emit("NW:PlayerDataUpdated", data.source, data);
+
+	emitNet("NW:SetPlayerData", source, data);
+	emit("NW:PlayerDataUpdated", source, data);
+	delayOn = false;
 };
 
-export const UpdateCharacterDataClient = (data?: CharacterDataObject, source?: number, citizenId?: string) => {
-	if (!data && source) {
-		const player = GetPlayerFromSource(source);
-		if (!player) return;
-		const character = player.getCurrentCharacter();
-		if (character.getCitizenId() === citizenId) data = character.toClientObject();
-	}
+export const UpdateCharacterDataClient = (source: number, citizenId: string) => {
+	if (delayOn) return;
+	delayOn = true;
+	Delay(200);
+
+	let data: undefined | CharacterDataObject;
+
+	const player = GetPlayerFromSource(source);
+
+	if (!player) return;
+
+	const character = player.getCurrentCharacter();
+
+	if (character.getCitizenId() === citizenId) data = character.toClientObject();
+
 	if (!data) return;
-	emitNet("NW:SetCharacterData", data.source, data);
-	emit("NW:CharacterDataUpdated", data.source, data);
+	emitNet("NW:SetCharacterData", source, data);
+	emit("NW:CharacterDataUpdated", source, data);
+	delayOn = false;
 };
