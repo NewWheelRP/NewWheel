@@ -3,6 +3,7 @@ import { Vector4 } from "@nativewrappers/client";
 import config from "../../config.json";
 import { UpdateCharacterDataClient } from "../functions";
 import { generateUUIDv4 } from "../utils";
+import NW from "../server";
 
 export class Character {
 	private static defaultCoords: Vector4 = new Vector4(config.characters.defaultCoords.x, config.characters.defaultCoords.y, config.characters.defaultCoords.z, config.characters.defaultCoords.w);
@@ -102,7 +103,7 @@ export class Character {
 				]
 			);
 
-			if (!playerLeft) UpdateCharacterDataClient(this.toClientObject());
+			if (!playerLeft) UpdateCharacterDataClient(this._source, this._citizenId);
 
 			if (affectedRows) console.log(`[id: ${this._source}] Character: ${this._firstName} ${this._lastName} was saved!`);
 		});
@@ -162,13 +163,13 @@ export class Character {
 	public setLoggedIn = (value: boolean, updateClientData?: boolean): void => {
 		this._loggedIn = value;
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public setCitizenId = (id: string, updateClientData?: boolean): void => {
 		this._citizenId = id;
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public getCitizenId = (): string => this._citizenId;
@@ -176,7 +177,7 @@ export class Character {
 	public setFirstName = (name: string, updateClientData?: boolean): void => {
 		this._firstName = name;
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public getFirstName = (): string => this._firstName;
@@ -184,7 +185,7 @@ export class Character {
 	public setLastName = (name: string, updateClientData?: boolean): void => {
 		this._lastName = name;
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public getLastName = (): string => this._lastName;
@@ -196,7 +197,7 @@ export class Character {
 	public setDOB = (dob: number, updateClientData?: boolean): void => {
 		this._DOB = dob;
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public getDOB = (): number => this._DOB;
@@ -206,7 +207,7 @@ export class Character {
 	public setHeight = (value: number, updateClientData?: boolean): void => {
 		this._height = value;
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public getSex = (): string => this._sex;
@@ -214,7 +215,7 @@ export class Character {
 	public setSex = (value: string, updateClientData?: boolean): void => {
 		this._sex = value;
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public getNationality = (): string => this._nationality;
@@ -222,7 +223,7 @@ export class Character {
 	public setNationality = (value: string, updateClientData?: boolean): void => {
 		this._nationality = value;
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public getBackstory = (): string => this._backstory;
@@ -230,7 +231,7 @@ export class Character {
 	public setBackstory = (value: string, updateClientData?: boolean): void => {
 		this._backstory = value;
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public getCoords = (): Vector4 | undefined => this._coords;
@@ -238,19 +239,19 @@ export class Character {
 	public setCoords = (value: Vector4 | undefined, updateClientData?: boolean): void => {
 		this._coords = value;
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public setObject = (key: string, value: any, updateClientData?: boolean): void => {
 		this._customObjects.set(key, value);
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public removeObject = (key: string, updateClientData?: boolean): void => {
 		this._customObjects.delete(key);
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public getObject = (key: string): any => this._customObjects.get(key);
@@ -278,13 +279,13 @@ export class Character {
 		const newAmount = amount - money.count;
 		global.exports["ox_inventory"].AddItem(this._source, "money", newAmount);
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public addCash = (amount: number, updateClientData?: boolean): void => {
 		global.exports["ox_inventory"].AddItem(this._source, "money", amount);
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public removeCash = (amount: number, updateClientData?: boolean): void => {
@@ -299,7 +300,7 @@ export class Character {
 
 		global.exports["ox_inventory"].RemoveItem(this._source, "money", amount);
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public setBank = (money: number, updateClientData?: boolean): void => {
@@ -307,7 +308,7 @@ export class Character {
 			this._bank = money;
 		}
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public addBank = (money: number, updateClientData?: boolean): void => {
@@ -315,7 +316,7 @@ export class Character {
 			this._bank += money;
 		}
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public removeBank = (money: number, updateClientData?: boolean): void => {
@@ -323,7 +324,7 @@ export class Character {
 			this._bank -= money;
 		}
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public getBank = (): number => {
@@ -339,10 +340,11 @@ export class Character {
 	public setPhoneNumber = (phone: number, updateClientData?: boolean): void => {
 		this._phoneNumber = phone;
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public loadInventory = (updateClientData?: boolean): void => {
+		const player = NW.Players.get(this._source);
 		if (config.characters.inventory === "ox_inventory") {
 			global.exports["ox_inventory"].setPlayerInventory({
 				source: this._source,
@@ -350,11 +352,11 @@ export class Character {
 				name: `${this._firstName} ${this._lastName}`,
 				sex: this._sex.toString(),
 				dateofbirth: this._DOB.toLocaleString(),
-				groups: {},
+				groups: player?.getGroups(),
 			});
 		}
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
 	public loadPhone = (updateClientData?: boolean): void => {
@@ -368,6 +370,6 @@ export class Character {
 			});
 		}
 
-		if (updateClientData) UpdateCharacterDataClient(undefined, this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 }

@@ -328,7 +328,6 @@ export class Player {
 			UpdatePlayerDataClient(this._source);
 			UpdateCharacterDataClient(this._source, this._currentChar.getCitizenId());
 		}
-
 	};
 
 	public getSessionStartTime = (): number => this._sessionStartTime;
