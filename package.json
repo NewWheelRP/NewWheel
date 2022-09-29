@@ -23,6 +23,7 @@
 		"@citizenfx/client": "^2.0.5906-1",
 		"@citizenfx/server": "^2.0.5906-1",
 		"@types/node": "^18.7.23",
+		"nx": "^14.8.1",
 		"typescript": "^4.8.4"
 	}
 }
