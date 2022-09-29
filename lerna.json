@@ -2,6 +2,5 @@
     "version": "0.0.1",
     "npmClient": "pnpm",
     "packages": ["web"],
-    "useNx": true,
-    "useWorkspaces": true
+    "useNx": true
 }
