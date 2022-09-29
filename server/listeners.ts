@@ -79,7 +79,7 @@ on("onResourceStop", (resource: string) => {
 	}
 });
 
-on("onResourceStart", (resource: string) => {
+on("onServerResourceStart", (resource: string) => {
 	if (resource !== "ox_inventory" || config.characters.inventory !== "ox_inventory") return;
-	NW.Players.forEach((player: Player) => player.getCurrentCharacter()?.loadInventory());
+	NW.Players.forEach((player: Player) => player.getCurrentCharacter()?.loadInventory(true));
 });
