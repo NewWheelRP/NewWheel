@@ -1,6 +1,6 @@
 import * as config from "../../config.json";
 import { Character } from "./Character";
-import { PlayerDataObject, PlayerDBObject, JSONValue } from "../../types";
+import { PlayerDataObject, PlayerDBObject, JSONValue, CharacterDataObject } from "../../types";
 import { UpdatePlayerDataClient, UpdateCharacterDataClient } from "../functions";
 
 export class Player {
@@ -215,43 +215,49 @@ export class Player {
 	public getFirstLogin = (): number => this._firstLogin;
 
 	public setFirstLogin = (login: number, updateClientData?: boolean): void => {
+		const previousVal: number = this._firstLogin;
 		this._firstLogin = login;
 
-		if (updateClientData) UpdatePlayerDataClient(this._source);
+		if (updateClientData) UpdatePlayerDataClient(this._source, "update", "firstLogin", login, previousVal);
 	};
 
 	public getLastLogin = (): number => this._lastLogin;
 
 	public setLastLogin = (login: number, updateClientData?: boolean): void => {
+		const previousVal: number = this._lastLogin;
 		this._lastLogin = login;
 
-		if (updateClientData) UpdatePlayerDataClient(this._source);
+		if (updateClientData) UpdatePlayerDataClient(this._source, "update", "lastLogin", login, previousVal);
 	};
 
 	public getPlayTime = (): number => this._playTime;
 
 	public setPlayTime = (time: number, updateClientData?: boolean): void => {
+		const previousVal: number = this._playTime;
 		this._playTime = time;
 
-		if (updateClientData) UpdatePlayerDataClient(this._source);
+		if (updateClientData) UpdatePlayerDataClient(this._source, "update", "playTime", time, previousVal);
 	};
 
 	public setCharacters = (characters: Character[], updateClientData?: boolean): void => {
 		if (!characters) return;
+		const previousVal: Map<string, Character> = this._characters;
 		characters.map((character) => this._characters.set(character.getCitizenId(), character));
 
-		if (updateClientData) UpdatePlayerDataClient(this._source);
+		if (updateClientData) UpdatePlayerDataClient(this._source, "update", "characters", this._characters, previousVal);
 	};
 
 	public setCharacter = (character: Character, updateClientData?: boolean): void => {
+		const previousVal: Character | undefined = this._characters.get(character.getCitizenId());
 		this._characters.set(character.getCitizenId(), character);
 
-		if (updateClientData) UpdatePlayerDataClient(this._source);
+		if (updateClientData) UpdatePlayerDataClient(this._source, "update", "character", character, previousVal);
 	};
 
 	public getCharacter = (citizenId: string): Character | undefined  => this._characters.get(citizenId);
 
 	public switchCharacter = (citizenId: string, updateClientData?: boolean): void => {
+		const previousVal: CharacterDataObject = this._currentChar.toClientObject();
 		this._currentChar.save();
 
 		const newChar: Character | undefined = this.getCharacter(citizenId);
@@ -260,8 +266,8 @@ export class Player {
 		this.setCurrentCharacter(newChar);
 
 		if (updateClientData) {
-			UpdatePlayerDataClient(this._source);
-			UpdateCharacterDataClient(this._source, this._currentChar.getCitizenId());
+			UpdatePlayerDataClient(this._source, "switch", "character", newChar.toClientObject(), previousVal);
+			UpdateCharacterDataClient(this._source, this._currentChar.getCitizenId(), "switch", "character", newChar.toClientObject(), previousVal);
 		}
 
 		// Do some camera stuff to make switching characters look cool
@@ -310,51 +316,56 @@ export class Player {
 
 	public setCurrentCharacter = (char: Character | string, updateClientData?: boolean): void => {
 		if (char instanceof Character) {
+			const previousVal: CharacterDataObject = this._currentChar.toClientObject();
 			this._currentChar = char;
 			char.loadInventory();
 			char.loadPhone();
 
 			if (updateClientData) {
-				UpdatePlayerDataClient(this._source);
-				UpdateCharacterDataClient(this._source, this._currentChar.getCitizenId());
+				UpdatePlayerDataClient(this._source, "switch", "character", char.toClientObject(), previousVal);
+				UpdateCharacterDataClient(this._source, this._currentChar.getCitizenId(), "switch", "character", char.toClientObject(), previousVal);
 			}
 
 			return;
 		}
 
-		const newChar = this._characters.get(char);
+		const newChar: Character | undefined = this._characters.get(char);
 
 		if (!newChar) return;
 
+		const previousVal: CharacterDataObject = this._currentChar.toClientObject();
 		this._currentChar = newChar;
 		newChar.loadInventory();
 		newChar.loadPhone();
 
 		if (updateClientData) {
-			UpdatePlayerDataClient(this._source);
-			UpdateCharacterDataClient(this._source, this._currentChar.getCitizenId());
+			UpdatePlayerDataClient(this._source, "switch", "character", newChar.toClientObject(), previousVal);
+			UpdateCharacterDataClient(this._source, this._currentChar.getCitizenId(), "switch", "character", newChar.toClientObject(), previousVal);
 		}
 	};
 
 	public getSessionStartTime = (): number => this._sessionStartTime;
 
 	public setSessionStartTime = (time: number, updateClientData?: boolean): void => {
+		const previousVal: number = this._sessionStartTime;
 		this._sessionStartTime = time;
 
-		if (updateClientData) UpdatePlayerDataClient(this._source);
+		if (updateClientData) UpdatePlayerDataClient(this._source, "update", "sessionStartTime", time, previousVal);
 	};
 
 	public getSetting = (key: string): any => this._settings.get(key);
 
 	public setSetting = (key: string, value: any, updateClientData?: boolean): void => {
+		const previousVal: any = this._settings.get(key);
 		this._settings.set(key, value);
 
-		if (updateClientData) UpdatePlayerDataClient(this._source);
+		if (updateClientData) UpdatePlayerDataClient(this._source, "update", `setting_${key}`, value, previousVal);
 	};
 
 	public removeSetting = (key: string, updateClientData?: boolean): void => {
+		const previousVal: any = this._settings.get(key);
 		this._settings.delete(key);
 
-		if (updateClientData) UpdatePlayerDataClient(this._source);
+		if (updateClientData) UpdatePlayerDataClient(this._source, "update", `setting_${key}`, null, previousVal);
 	};
 }
