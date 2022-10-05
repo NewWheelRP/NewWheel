@@ -1,9 +1,6 @@
 import { CharacterDataObject, PlayerDataObject } from "../types";
 import { Player } from "./Classes/Player";
 import NW, { sendCharacters } from "./server";
-import { Delay } from "../shared/utils";
-
-let delayOn: boolean = false;
 
 export const OnFirstJoin = (source: number, license: string) => {
 	const player = new Player(source, license, true);
@@ -26,7 +23,7 @@ export const OnFirstJoin = (source: number, license: string) => {
 			player.getPlayTime()
 		],
 		() => {
-			UpdatePlayerDataClient(source);
+			UpdatePlayerDataClient(source, "new", "all", player.toClientObject());
 			sendCharacters(source, license);
 		}
 	);
@@ -73,11 +70,7 @@ export const SavePlayer = (player: Player | number, playerLeft?: boolean) => {
 
 global.exports("SavePlayer", SavePlayer);
 
-export const UpdatePlayerDataClient = (source: number) => {
-	if (delayOn) return;
-	delayOn = true;
-	Delay(200);
-
+export const UpdatePlayerDataClient = (source: number, type: string, changed: string, changedVal: any, previousVal?: any): void => {
 	let data: undefined | PlayerDataObject;
 
 	const player = GetPlayerFromSource(source);
@@ -86,16 +79,11 @@ export const UpdatePlayerDataClient = (source: number) => {
 
 	if (!data) return;
 
-	emitNet("NW:SetPlayerData", source, data);
-	emit("NW:PlayerDataUpdated", source, data);
-	delayOn = false;
+	emitNet("NW:SetPlayerData", source, data, changed, changedVal, previousVal);
+	emit("NW:PlayerDataUpdated", source, data, changed, changedVal, previousVal);
 };
 
-export const UpdateCharacterDataClient = (source: number, citizenId: string) => {
-	if (delayOn) return;
-	delayOn = true;
-	Delay(200);
-
+export const UpdateCharacterDataClient = (source: number, citizenId: string, type: string, changed: string, changedVal: any, previousVal?: any): void => {
 	let data: undefined | CharacterDataObject;
 
 	const player = GetPlayerFromSource(source);
@@ -107,7 +95,7 @@ export const UpdateCharacterDataClient = (source: number, citizenId: string) => 
 	if (character.getCitizenId() === citizenId) data = character.toClientObject();
 
 	if (!data) return;
-	emitNet("NW:SetCharacterData", source, data);
-	emit("NW:CharacterDataUpdated", source, data);
-	delayOn = false;
+
+	emitNet("NW:SetCharacterData", source, data, type, changed, changedVal, previousVal);
+	emit("NW:CharacterDataUpdated", source, data, type, changed, changedVal, previousVal);
 };

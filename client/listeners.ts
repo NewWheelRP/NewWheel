@@ -23,16 +23,16 @@ onNet("NW:ShowCharacterSelection", (characters: CharacterDataObject[]) => {
 	}, 3000);
 });
 
-onNet("NW:SetPlayerData", (playerData: PlayerDataObject) => {
+onNet("NW:SetPlayerData", (playerData: PlayerDataObject, type: string, changed: string, changedVal: any, previousVal?: any) => {
 	const invokingResource: string | null = GetInvokingResource();
 	if (invokingResource && invokingResource !== GetCurrentResourceName()) return;
 	NW.PlayerData = playerData;
-	emit("NW:PlayerDataUpdated", playerData);
+	emit("NW:PlayerDataUpdated", playerData, type, changed, changedVal, previousVal);
 });
 
-onNet("NW:SetCharacterData", (characterData: CharacterDataObject) => {
+onNet("NW:SetCharacterData", (characterData: CharacterDataObject, type: string, changed: string, changedVal: any, previousVal?: any) => {
 	const invokingResource: string | null = GetInvokingResource();
 	if (invokingResource && invokingResource !== GetCurrentResourceName()) return;
 	NW.CharacterData = characterData;
-	emit("NW:CharacterDataUpdated", characterData);
+	emit("NW:CharacterDataUpdated", characterData, type, changed, changedVal, previousVal);
 });

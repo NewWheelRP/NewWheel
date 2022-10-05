@@ -36,6 +36,7 @@ export class Player {
 	}
 
 	public save = (playerLeft?: boolean): void => {
+		const previousVal: PlayerDataObject = this.toClientObject();
 		const curDate = new Date();
 		const curTime = curDate.getTime();
 		this._playTime = this._playTime + (curTime - this._sessionStartTime);
@@ -46,7 +47,7 @@ export class Player {
 				[this._name, this._groups, curTime, this._playTime, this._license]
 			);
 
-			if (!playerLeft) UpdatePlayerDataClient(this._source);
+			if (!playerLeft) UpdatePlayerDataClient(this._source, "save", "all", this.toClientObject(), previousVal);
 
 			if (affectedRows) console.log(`Player: ${this._name} was saved!`);
 		});
@@ -97,15 +98,17 @@ export class Player {
 	public getName = (): string => this._name;
 
 	public setName = (theName: string, updateClientData?: boolean): void => {
+		const previousVal: string = this._name;
 		this._name = theName;
 
-		if (updateClientData) UpdatePlayerDataClient(this._source);
+		if (updateClientData) UpdatePlayerDataClient(this._source, "update", "name", theName, previousVal);
 	};
 
 	public getGroups = (): string | string[] => this._groups;
 
 	public setGroups = (groups: string | string[], updateClientData?: boolean): void => {
 		const groupObj: JSONValue = config.player.groups;
+		const previousVal: string | string[] = this._groups;
 
 		if (typeof groups === "string") {
 			if (groupObj[groups]) {
@@ -132,11 +135,12 @@ export class Player {
 			this._groups = tempGroups;
 		}
 
-		if (updateClientData) UpdatePlayerDataClient(this._source);
+		if (updateClientData) UpdatePlayerDataClient(this._source, "update", "groups", this._groups, previousVal);
 	};
 
 	public addGroups = (groups: string | string[], updateClientData?: boolean): void => {
 		const groupObj: JSONValue = config.player.groups;
+		const previousVal: string | string[] = this._groups;
 
 		if (typeof groups === "string") {
 			if (!groupObj[groups]) return console.error(`Group ${groups} does not exist!`);
@@ -170,11 +174,13 @@ export class Player {
 			});
 		}
 
-		if (updateClientData) UpdatePlayerDataClient(this._source);
+		if (updateClientData) UpdatePlayerDataClient(this._source, "update", "groups", this._groups, previousVal);
 	};
 
 	public removeGroups = (groups: string | string[], updateClientData?: boolean): void => {
 		const groupObj: JSONValue = config.player.groups;
+		const previousVal: string | string[] = this._groups;
+
 		if (typeof groups === "string") {
 			if (!groupObj[groups]) return console.error(`Group ${groups} does not exist!`);
 
@@ -203,7 +209,7 @@ export class Player {
 			}
 		}
 
-		if (updateClientData) UpdatePlayerDataClient(this._source);
+		if (updateClientData) UpdatePlayerDataClient(this._source, "update", "groups", this._groups, previousVal);
 	};
 
 	public getFirstLogin = (): number => this._firstLogin;
