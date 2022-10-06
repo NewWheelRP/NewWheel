@@ -89,7 +89,7 @@ export const SaveCoords = (player: Player | number, coords: Vector4) => {
 	character.setCoords(coords, true);
 }
 
-global.exports("SaveCOords", SaveCoords);
+global.exports("SaveCoords", SaveCoords);
 
 export const UpdatePlayerDataClient = (source: number, type: string, changed: string, changedVal: any, previousVal?: any): void => {
 	let data: undefined | PlayerDataObject;
