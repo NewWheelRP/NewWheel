@@ -82,7 +82,7 @@ export class Character {
 	}
 
 	public save = (playerLeft?: boolean): void => {
-		const inventory = global.exports["ox_inventory"].Inventory(this._source);
+		const inventory = global.exports.ox_inventory.Inventory(this._source);
 		const ped: number = GetPlayerPed(this._source);
 		const coords: number[] = GetEntityCoords(ped);
 		const heading: number = GetEntityHeading(ped);
@@ -273,7 +273,7 @@ export class Character {
 	public getObject = (key: string): any => this._customObjects.get(key);
 
 	public getCash = (): number => {
-		const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
+		const money = global.exports.ox_inventory.GetItem(this._source, "money", null, false);
 		if (!money) return 0;
 		return money.count;
 	};
@@ -283,19 +283,19 @@ export class Character {
 		let previousVal: number = 0;
 		if (config.characters.handleMoney) {
 			if (config.characters.inventory === "ox_inventory") {
-				const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
+				const money = global.exports.ox_inventory.GetItem(this._source, "money", null, false);
 				previousVal = money.count;
 
 				if (!money) {
-					global.exports["ox_inventory"].AddItem(this._source, "money", amount);
+					global.exports.ox_inventory.AddItem(this._source, "money", amount);
 					moneyAmount = amount;
 				} else if (money.count > amount) {
 					const newAmount = money.count - amount;
-					global.exports["ox_inventory"].RemoveItem(this._source, "money", newAmount);
+					global.exports.ox_inventory.RemoveItem(this._source, "money", newAmount);
 					moneyAmount = newAmount;
 				} else {
 					const newAmount = amount - money.count;
-					global.exports["ox_inventory"].AddItem(this._source, "money", newAmount);
+					global.exports.ox_inventory.AddItem(this._source, "money", newAmount);
 					moneyAmount = newAmount;
 				}
 			}
@@ -310,7 +310,7 @@ export class Character {
 		if (config.characters.handleMoney) {
 			if (config.characters.inventory === "ox_inventory") {
 				const money = global.exports.ox_inventory.GetItem(this._source, "money", null, false);
-				global.exports["ox_inventory"].AddItem(this._source, "money", amount);
+				global.exports.ox_inventory.AddItem(this._source, "money", amount);
 				previousVal = money.count;
 				moneyAmount = previousVal + amount;
 			}
@@ -324,14 +324,14 @@ export class Character {
 		let previousVal: number = 0;
 		if (config.characters.handleMoney) {
 			if (config.characters.inventory === "ox_inventory") {
-				const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
+				const money = global.exports.ox_inventory.GetItem(this._source, "money", null, false);
 
 				if (!money) return;
 		
 				if (money.count < amount) {
-					global.exports["ox_inventory"].RemoveItem(this._source, "money", money.count);
+					global.exports.ox_inventory.RemoveItem(this._source, "money", money.count);
 				} else {
-					global.exports["ox_inventory"].RemoveItem(this._source, "money", amount);
+					global.exports.ox_inventory.RemoveItem(this._source, "money", amount);
 					previousVal = money.count;
 					moneyAmount = previousVal - amount;
 				}
@@ -393,7 +393,7 @@ export class Character {
 	public loadInventory = (): void => {
 		const player = NW.Players.get(this._source);
 		if (config.characters.inventory === "ox_inventory") {
-			global.exports["ox_inventory"].setPlayerInventory({
+			global.exports.ox_inventory.setPlayerInventory({
 				source: this._source,
 				identifier: this._citizenId,
 				name: `${this._firstName} ${this._lastName}`,
