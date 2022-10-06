@@ -103,7 +103,7 @@ export class Character {
 				]
 			);
 
-			if (!playerLeft) UpdateCharacterDataClient(this._source, this._citizenId);
+			if (!playerLeft) UpdateCharacterDataClient(this._source, this._citizenId, "save", "all", this.toClientObject());
 
 			if (affectedRows) console.log(`[id: ${this._source}] Character: ${this._firstName} ${this._lastName} was saved!`);
 		});
@@ -161,31 +161,35 @@ export class Character {
 	public getLoggedIn = (): boolean => this._loggedIn;
 
 	public setLoggedIn = (value: boolean, updateClientData?: boolean): void => {
+		const previousVal: boolean = this._loggedIn;
 		this._loggedIn = value;
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "loggedIn", value, previousVal);
 	};
 
 	public setCitizenId = (id: string, updateClientData?: boolean): void => {
+		const previousVal: string = this._citizenId;
 		this._citizenId = id;
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "citizenId", id, previousVal);
 	};
 
 	public getCitizenId = (): string => this._citizenId;
 
 	public setFirstName = (name: string, updateClientData?: boolean): void => {
+		const previousVal: string = this._citizenId;
 		this._firstName = name;
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "firstName", name, previousVal);
 	};
 
 	public getFirstName = (): string => this._firstName;
 
 	public setLastName = (name: string, updateClientData?: boolean): void => {
+		const previousVal: string = this._lastName
 		this._lastName = name;
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "lastName", name, previousVal);
 	};
 
 	public getLastName = (): string => this._lastName;
@@ -195,9 +199,10 @@ export class Character {
 	};
 
 	public setDOB = (dob: number, updateClientData?: boolean): void => {
+		const previousVal: number = this._DOB;
 		this._DOB = dob;
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "DOB", dob, previousVal);
 	};
 
 	public getDOB = (): number => this._DOB;
@@ -205,53 +210,60 @@ export class Character {
 	public getHeight = (): number => this._height;
 
 	public setHeight = (value: number, updateClientData?: boolean): void => {
+		const previousVal: number = this._height;
 		this._height = value;
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "height", value, previousVal);
 	};
 
 	public getSex = (): string => this._sex;
 
 	public setSex = (value: string, updateClientData?: boolean): void => {
+		const previousVal: string = this._sex;
 		this._sex = value;
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "sex", value, previousVal);
 	};
 
 	public getNationality = (): string => this._nationality;
 
 	public setNationality = (value: string, updateClientData?: boolean): void => {
+		const previousVal: string = this._nationality;
 		this._nationality = value;
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "nationality", value, previousVal);
 	};
 
 	public getBackstory = (): string => this._backstory;
 
 	public setBackstory = (value: string, updateClientData?: boolean): void => {
+		const previousVal: string = this._backstory;
 		this._backstory = value;
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "backstory", value, previousVal);
 	};
 
 	public getCoords = (): Vector4 | undefined => this._coords;
 
 	public setCoords = (value: Vector4 | undefined, updateClientData?: boolean): void => {
+		const previousVal: Vector4 | undefined = this._coords;
 		this._coords = value;
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "coords", value, previousVal);
 	};
 
 	public setObject = (key: string, value: any, updateClientData?: boolean): void => {
+		const previousVal = this._customObjects.get(key);
 		this._customObjects.set(key, value);
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", `customObjects_${key}`, value, previousVal);
 	};
 
 	public removeObject = (key: string, updateClientData?: boolean): void => {
+		const previousVal = this._customObjects.get(key);
 		this._customObjects.delete(key);
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", `customObjects_${key}`, null, previousVal);
 	};
 
 	public getObject = (key: string): any => this._customObjects.get(key);
@@ -263,72 +275,102 @@ export class Character {
 	};
 
 	public setCash = (amount: number, updateClientData?: boolean): void => {
-		const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
+		let moneyAmount: number = 0;
+		let previousVal: number = 0;
+		if (config.characters.handleMoney) {
+			if (config.characters.inventory === "ox_inventory") {
+				const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
+				previousVal = money.count;
 
-		if (!money) {
-			global.exports["ox_inventory"].AddItem(this._source, "money");
-			return;
+				if (!money) {
+					global.exports["ox_inventory"].AddItem(this._source, "money", amount);
+					moneyAmount = amount;
+				} else if (money.count > amount) {
+					const newAmount = money.count - amount;
+					global.exports["ox_inventory"].RemoveItem(this._source, "money", newAmount);
+					moneyAmount = newAmount;
+				} else {
+					const newAmount = amount - money.count;
+					global.exports["ox_inventory"].AddItem(this._source, "money", newAmount);
+					moneyAmount = newAmount;
+				}
+			}
 		}
 
-		if (money.count > amount) {
-			const newAmount = money.count - amount;
-			global.exports["ox_inventory"].RemoveItem(this._source, "money", newAmount);
-			return;
-		}
-
-		const newAmount = amount - money.count;
-		global.exports["ox_inventory"].AddItem(this._source, "money", newAmount);
-
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "cash", moneyAmount, previousVal);
 	};
 
 	public addCash = (amount: number, updateClientData?: boolean): void => {
-		global.exports["ox_inventory"].AddItem(this._source, "money", amount);
+		let moneyAmount: number = 0;
+		let previousVal: number = 0;
+		if (config.characters.handleMoney) {
+			if (config.characters.inventory === "ox_inventory") {
+				const money = global.exports.ox_inventory.GetItem(this._source, "money", null, false);
+				global.exports["ox_inventory"].AddItem(this._source, "money", amount);
+				previousVal = money.count;
+				moneyAmount = previousVal + amount;
+			}
+		}
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "cash", moneyAmount, previousVal);
 	};
 
 	public removeCash = (amount: number, updateClientData?: boolean): void => {
-		const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
+		let moneyAmount: number = 0;
+		let previousVal: number = 0;
+		if (config.characters.handleMoney) {
+			if (config.characters.inventory === "ox_inventory") {
+				const money = global.exports["ox_inventory"].GetItem(this._source, "money", null, false);
 
-		if (!money) return;
-
-		if (money.count < amount) {
-			global.exports["ox_inventory"].RemoveItem(this._source, "money", money.count);
-			return;
+				if (!money) return;
+		
+				if (money.count < amount) {
+					global.exports["ox_inventory"].RemoveItem(this._source, "money", money.count);
+				} else {
+					global.exports["ox_inventory"].RemoveItem(this._source, "money", amount);
+					previousVal = money.count;
+					moneyAmount = previousVal - amount;
+				}
+			} else {
+				// Other inventories here
+			}
 		}
 
-		global.exports["ox_inventory"].RemoveItem(this._source, "money", amount);
-
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "cash", moneyAmount, previousVal);
 	};
 
 	public setBank = (money: number, updateClientData?: boolean): void => {
-		if (config.characters.useSimpleBanking) {
+		let previousVal: number | undefined
+		if (config.characters.handleMoney) {
+			previousVal = this._bank;
 			this._bank = money;
 		}
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "bank", money, previousVal);
 	};
 
 	public addBank = (money: number, updateClientData?: boolean): void => {
-		if (config.characters.useSimpleBanking) {
+		let previousVal: number | undefined
+		if (config.characters.handleMoney) {
+			previousVal = this._bank;
 			this._bank += money;
 		}
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "bank", this._bank, previousVal);
 	};
 
 	public removeBank = (money: number, updateClientData?: boolean): void => {
-		if (config.characters.useSimpleBanking) {
+		let previousVal: number | undefined;
+		if (config.characters.handleMoney) {
+			previousVal = this._bank;
 			this._bank -= money;
 		}
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "bank", this._bank, previousVal);
 	};
 
 	public getBank = (): number => {
-		if (config.characters.useSimpleBanking) {
+		if (config.characters.handleMoney) {
 			return this._bank;
 		}
 
@@ -338,12 +380,13 @@ export class Character {
 	public getPhoneNumber = (): number => this._phoneNumber;
 
 	public setPhoneNumber = (phone: number, updateClientData?: boolean): void => {
+		const previousVal: number = this._phoneNumber;
 		this._phoneNumber = phone;
 
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
+		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "phoneNumber", phone, previousVal);
 	};
 
-	public loadInventory = (updateClientData?: boolean): void => {
+	public loadInventory = (): void => {
 		const player = NW.Players.get(this._source);
 		if (config.characters.inventory === "ox_inventory") {
 			global.exports["ox_inventory"].setPlayerInventory({
@@ -355,11 +398,9 @@ export class Character {
 				groups: player?.getGroups(),
 			});
 		}
-
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 
-	public loadPhone = (updateClientData?: boolean): void => {
+	public loadPhone = (): void => {
 		if (config.characters.phone === "npwd") {
 			global.exports.npwd.newPlayer({
 				source: this._source,
@@ -369,7 +410,5 @@ export class Character {
 				lastName: this._lastName,
 			});
 		}
-
-		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId);
 	};
 }

@@ -19,7 +19,7 @@
 	},
 	"characters": {
 		"multiCharacter": true,
-		"useSimpleBanking": false,
+		"handleMoney": true,
 		"defaultCoords": {
 			"x": 157.23,
 			"y": -993.29,
