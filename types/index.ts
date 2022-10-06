@@ -38,7 +38,7 @@ export type CharacterDataObject = {
 	sex?: string,
 	nationality?: string,
 	backstory?: string,
-	coords: Vector4 | undefined,
+	coords: Vector4,
 	customObjects?: Map<string, any>
 }
 

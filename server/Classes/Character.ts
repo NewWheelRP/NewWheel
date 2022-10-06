@@ -12,7 +12,7 @@ export class Character {
 	private _loggedIn: boolean = false;
 	private _firstName: string = "";
 	private _lastName: string = "";
-	private _coords: Vector4 | undefined = Character.defaultCoords;
+	private _coords: Vector4 = Character.defaultCoords;
 	private _citizenId: string = "";
 	private _DOB: number = 0;
 	private _height: number = 0;
@@ -243,10 +243,10 @@ export class Character {
 		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "backstory", value, previousVal);
 	};
 
-	public getCoords = (): Vector4 | undefined => this._coords;
+	public getCoords = (): Vector4 => this._coords;
 
-	public setCoords = (value: Vector4 | undefined, updateClientData?: boolean): void => {
-		const previousVal: Vector4 | undefined = this._coords;
+	public setCoords = (value: Vector4, updateClientData?: boolean): void => {
+		const previousVal: Vector4 = this._coords;
 		this._coords = value;
 
 		if (updateClientData) UpdateCharacterDataClient(this._source, this._citizenId, "update", "coords", value, previousVal);

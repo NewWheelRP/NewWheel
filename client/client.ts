@@ -23,7 +23,7 @@ const NW: NW = {
 		loggedIn: false,
 		firstName: "placeholderFirstName",
 		lastName: "placeholderLastName",
-		coords: undefined,
+		coords: new Vector4(config.characters.defaultCoords.x, config.characters.defaultCoords.y, config.characters.defaultCoords.z, config.characters.defaultCoords.w),
 	}
 };
 
