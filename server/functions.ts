@@ -1,4 +1,6 @@
+import { Vector4 } from "@nativewrappers/client";
 import { CharacterDataObject, PlayerDataObject } from "../types";
+import { Character } from "./Classes/Character";
 import { Player } from "./Classes/Player";
 import NW, { sendCharacters } from "./server";
 
@@ -59,16 +61,35 @@ export const SavePlayer = (player: Player | number, playerLeft?: boolean) => {
 
 	if (!player2 || !(player2 instanceof Player)) return;
 
-	player2.save(true);
+	player2.save(playerLeft);
 
 	if (playerLeft) {
-		emitNet("NW:PlayerLogout", player2.getSource(), player2.toClientObject());
-		emit("NW:PlayerLogout", player2.getSource(), player2.toClientObject());
-		NW.Players.delete(player2.getSource());
+		const playerSrc: number = player2.getSource();
+		const playerClObj: PlayerDataObject = player2.toClientObject();
+		emitNet("NW:PlayerLogout", playerSrc, playerClObj);
+		emit("NW:PlayerLogout", playerSrc, playerClObj);
+		NW.Players.delete(playerSrc);
 	}
 };
 
 global.exports("SavePlayer", SavePlayer);
+
+export const SaveCoords = (player: Player | number, coords: Vector4) => {
+	let player2: Player | undefined;
+
+	if (player instanceof Player) player2 = player;
+	else player2 = GetPlayerFromSource(player);
+
+	if (!player2 || !(player2 instanceof Player)) return;
+
+	const character: Character | undefined = player2.getCurrentCharacter();
+
+	if (!character) return;
+
+	character.setCoords(coords, true);
+}
+
+global.exports("SaveCOords", SaveCoords);
 
 export const UpdatePlayerDataClient = (source: number, type: string, changed: string, changedVal: any, previousVal?: any): void => {
 	let data: undefined | PlayerDataObject;

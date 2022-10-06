@@ -9,11 +9,13 @@ const NW: NW = {
 import { Character } from "./Classes/Character";
 import { Player } from "./Classes/Player";
 import { getLicense } from "./utils";
-import { GetPlayerFromSource, SavePlayer, SavePlayers, OnFirstJoin } from "./functions";
+import { GetPlayerFromSource, SavePlayer, SavePlayers, OnFirstJoin, SaveCoords } from "./functions";
 import "./listeners";
 import "./connecting";
 import "./functions";
 import { CharacterDataObject, PlayerDBObject, CharacterDBObject } from "../types";
+import * as config from "../config.json";
+import { Vector4 } from "@nativewrappers/client";
 
 // because why not
 if (GetResourceState("spawnmanager") !== "missing" || GetResourceState("spawnmanager") !== "stopped" || GetResourceState("spawnmanager") !== "stopping") {
@@ -89,5 +91,14 @@ const firstJoin = (source: number, license: string) => {
 setInterval(() => {
 	SavePlayers();
 }, 300000);
+
+setInterval(() => {
+	NW.Players.forEach((player: Player, source: number) => {
+		const ped: number = GetPlayerPed(source.toString());
+		const coords: number[] = GetEntityCoords(ped);
+		const heading: number = GetEntityHeading(ped);
+		SaveCoords(player, new Vector4(coords[0], coords[1], coords[2], heading));
+	});
+}, config.characters.coordsSaveTimeout);
 
 export default NW;

@@ -1,7 +1,7 @@
 import { CharacterDataObject, CharacterNewObject, CharacterDBObject } from "../../types";
 import { Vector4 } from "@nativewrappers/client";
 import config from "../../config.json";
-import { UpdateCharacterDataClient } from "../functions";
+import { SaveCoords, UpdateCharacterDataClient } from "../functions";
 import { generateUUIDv4 } from "../utils";
 import NW from "../server";
 
@@ -83,6 +83,10 @@ export class Character {
 
 	public save = (playerLeft?: boolean): void => {
 		const inventory = global.exports["ox_inventory"].Inventory(this._source);
+		const ped: number = GetPlayerPed(this._source);
+		const coords: number[] = GetEntityCoords(ped);
+		const heading: number = GetEntityHeading(ped);
+		SaveCoords(this._source, new Vector4(coords[0], coords[1], coords[2], heading));
 
 		setImmediate(async () => {
 			const affectedRows = await global.exports.oxmysql.update_async(

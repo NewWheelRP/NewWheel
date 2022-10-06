@@ -34,7 +34,6 @@ import "./nui";
 import "./listeners";
 import * as config from "./../config.json";
 import { Vector4 } from "@nativewrappers/client";
-import { SaveCoords } from "./functions";
 import { joaat } from "../shared/utils";
 
 let joined: boolean = false;
@@ -132,9 +131,5 @@ setInterval(() => {
 		}
 	}
 }, 500);
-
-setInterval(() => {
-	SaveCoords();
-}, config.characters.coordsSaveTimeout);
 
 export default NW;

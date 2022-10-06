@@ -1,6 +1,5 @@
 import { Vector3 } from "@nativewrappers/client";
 import NW from "./client";
-import { SaveCoords } from "./functions";
 import { getClosestVehicle } from "./utils";
 import { Delay, joaat } from "../shared/utils";
 
@@ -43,7 +42,6 @@ RegisterCommand("repairveh", async () => {
 }, false);
 
 RegisterCommand("saveall", async () => {
-	SaveCoords();
 	emitNet("NW:SaveAll");
 }, false);
 
