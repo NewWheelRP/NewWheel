@@ -23,62 +23,54 @@ export class Character {
 	private _bank: number = 0;
 	private _customObjects: Map<string, any> = new Map();
 
-	static load = (source: number, license: string, data: CharacterDBObject): Character => {
-		const character = new Character(source, license);
-		character.setFirstName(data.firstName);
-		character.setLastName(data.lastName);
-		character.setLoggedIn(true);
-		character.setCoords(JSON.parse(data.coords));
-		if (data.citizenId) character.setCitizenId(data.citizenId);
-		if (data.dob) character.setDOB(data.dob);
-		if (data.height) character.setHeight(data.height);
-		if (data.sex) character.setSex(data.sex);
-		if (data.nationality) character.setNationality(data.nationality);
-		if (data.backstory) character.setBackstory(data.backstory);
-		if (data.phone_number) character.setPhoneNumber(data.phone_number);
-		if (data.bank) character.setBank(data.bank);
-		return character;
-	};
-
-	static new = (source: number, license: string, data: CharacterNewObject): Character => {
-		const character = new Character(source, license);
-		character.setFirstName(data.firstName);
-		character.setLastName(data.lastName);
-		character.setLoggedIn(true);
-		character.setCoords(Character.defaultCoords);
-		character.setCitizenId(generateUUIDv4());
-		if (data.dob) character.setDOB(new Date(data.dob).getTime());
-		if (data.height) character.setHeight(data.height);
-		if (data.sex) character.setSex(data.sex);
-		if (data.nationality) character.setNationality(data.nationality);
-		if (data.backstory) character.setBackstory(data.backstory);
-		global.exports.oxmysql.insert(
-			"INSERT INTO characters (citizenId, license, firstName, lastName, dob, height, sex, bank, nationality, backstory, coords, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-			[
-				character.getCitizenId(),
-				character.getLicense(),
-				character.getFirstName(),
-				character.getLastName(),
-				character.getDOB(),
-				character.getHeight(),
-				character.getSex(),
-				character.getBank(),
-				character.getNationality(),
-				character.getBackstory(),
-				JSON.stringify(character.getCoords()),
-				character.getPhoneNumber(),
-			], async () => {
-				setImmediate(async () => {
-					character.setPhoneNumber(await global.exports.npwd.generatePhoneNumber());
-				});
-			}
-		);
-		return character;
-	};
-
-	constructor(source: number, license: string) {
+	constructor(source: number, license: string, newChar: boolean, data: CharacterDBObject | CharacterNewObject) {
 		this._source = source;
 		this._license = license;
+		this.setFirstName(data.firstName);
+		this.setLastName(data.lastName);
+		// @ts-ignore
+		this.setCoords(newChar ? Character.defaultCoords : data.coords);
+		if (newChar) {
+			if (data.dob) this.setDOB(new Date(data.dob).getTime());
+			if (data.height) this.setHeight(data.height);
+			if (data.sex) this.setSex(data.sex);
+			if (data.nationality) this.setNationality(data.nationality);
+			if (data.backstory) this.setBackstory(data.backstory);
+			global.exports.oxmysql.insert(
+				"INSERT INTO characters (citizenId, license, firstName, lastName, dob, height, sex, bank, nationality, backstory, coords, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+				[
+					this.getCitizenId(),
+					license,
+					data.firstName,
+					data.lastName,
+					this.getDOB(),
+					this.getHeight(),
+					this.getSex(),
+					this.getBank(),
+					this.getNationality(),
+					this.getBackstory(),
+					JSON.stringify(Character.defaultCoords),
+					this.getPhoneNumber(),
+				], async () => {
+					setImmediate(async () => {
+						this.setPhoneNumber(await global.exports.npwd.generatePhoneNumber());
+					});
+				}
+			);
+		} else {
+			// @ts-ignore
+			if (data.citizenId) this.setCitizenId(data.citizenId);
+			if (data.dob) this.setDOB(data.dob);
+			if (data.height) this.setHeight(data.height);
+			if (data.sex) this.setSex(data.sex);
+			if (data.nationality) this.setNationality(data.nationality);
+			if (data.backstory) this.setBackstory(data.backstory);
+			// @ts-ignore
+			if (data.phone_number) this.setPhoneNumber(data.phone_number);
+			// @ts-ignore
+			if (data.bank) this.setBank(data.bank);
+		}
+		this.setLoggedIn(true);
 	}
 
 	public save = (playerLeft?: boolean): void => {
@@ -327,7 +319,7 @@ export class Character {
 				const money = global.exports.ox_inventory.GetItem(this._source, "money", null, false);
 
 				if (!money) return;
-		
+
 				if (money.count < amount) {
 					global.exports.ox_inventory.RemoveItem(this._source, "money", money.count);
 				} else {

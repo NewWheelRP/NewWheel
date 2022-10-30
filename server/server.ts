@@ -71,9 +71,8 @@ export const sendCharacters = (source: number, license: string, result?: Charact
 	const newChars: CharacterDataObject[] = [];
 	if (result) {
 		result.forEach((v: CharacterDBObject) => {
-			const char = Character.load(source, license, v);
+			const char = new Character(source, license, false, v);
 			newChars.push(char.toClientObject());
-
 			chars.push(char);
 		});
 

@@ -25,7 +25,7 @@ onNet("NW:CreateNewCharacter", (data: CharacterNewObject) => {
 	const source: number = global.source;
 	const player: Player | undefined = GetPlayerFromSource(source);
 	if (!player) return;
-	const character: Character = Character.new(source, player.getLicense(), data);
+	const character: Character = new Character(source, player.getLicense(), true, data);
 	player.setCharacter(character);
 	player.setCurrentCharacter(character);
 	player.save();

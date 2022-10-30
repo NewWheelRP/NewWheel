@@ -316,7 +316,7 @@ export class Player {
 
 	public setCurrentCharacter = (char: Character | string, updateClientData?: boolean): void => {
 		if (char instanceof Character) {
-			const previousVal: CharacterDataObject = this._currentChar.toClientObject();
+			const previousVal: CharacterDataObject | null = this._currentChar?.toClientObject();
 			this._currentChar = char;
 			char.loadInventory();
 			char.loadPhone();
@@ -333,7 +333,7 @@ export class Player {
 
 		if (!newChar) return;
 
-		const previousVal: CharacterDataObject = this._currentChar.toClientObject();
+		const previousVal: CharacterDataObject | null = this._currentChar?.toClientObject();
 		this._currentChar = newChar;
 		newChar.loadInventory();
 		newChar.loadPhone();
