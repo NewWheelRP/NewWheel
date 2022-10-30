@@ -29,7 +29,8 @@ export class Character {
 		this.setFirstName(data.firstName);
 		this.setLastName(data.lastName);
 		// @ts-ignore
-		this.setCoords(newChar ? Character.defaultCoords : JSON.parse(data.coords));
+		const coords = data.coords ? JSON.parse(data.coords) : null;
+		this.setCoords(newChar ? Character.defaultCoords : new Vector4(coords?.x || Character.defaultCoords.x, coords?.y || Character.defaultCoords.y, coords?.z || Character.defaultCoords.z, coords?.w || Character.defaultCoords.w));
 		if (newChar) {
 			this.setCitizenId(generateUUIDv4());
 			if (data.dob) this.setDOB(new Date(data.dob).getTime());
@@ -37,27 +38,26 @@ export class Character {
 			if (data.sex) this.setSex(data.sex);
 			if (data.nationality) this.setNationality(data.nationality);
 			if (data.backstory) this.setBackstory(data.backstory);
-			global.exports.oxmysql.insert(
-				"INSERT INTO characters (citizenId, license, firstName, lastName, dob, height, sex, bank, nationality, backstory, coords, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-				[
-					this.getCitizenId(),
-					license,
-					data.firstName,
-					data.lastName,
-					this.getDOB(),
-					this.getHeight(),
-					this.getSex(),
-					this.getBank(),
-					this.getNationality(),
-					this.getBackstory(),
-					JSON.stringify(Character.defaultCoords),
-					this.getPhoneNumber(),
-				], async () => {
-					setImmediate(async () => {
-						this.setPhoneNumber(await global.exports.npwd.generatePhoneNumber());
-					});
-				}
-			);
+			setImmediate(async () => {
+				this.setPhoneNumber(await global.exports.npwd.generatePhoneNumber());
+				global.exports.oxmysql.insert(
+					"INSERT INTO characters (citizenId, license, firstName, lastName, dob, height, sex, bank, nationality, backstory, coords, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+					[
+						this.getCitizenId(),
+						license,
+						data.firstName,
+						data.lastName,
+						this.getDOB(),
+						this.getHeight(),
+						this.getSex(),
+						this.getBank(),
+						this.getNationality(),
+						this.getBackstory(),
+						JSON.stringify(Character.defaultCoords),
+						this.getPhoneNumber(),
+					]
+				);
+			});
 		} else {
 			// @ts-ignore
 			if (data.citizenId) this.setCitizenId(data.citizenId);
@@ -74,12 +74,14 @@ export class Character {
 		this.setLoggedIn(true);
 	}
 
-	public save = (playerLeft?: boolean): void => {
+	public save = (playerLeft?: boolean, newPlayer?: boolean): void => {
 		const inventory = global.exports.ox_inventory.Inventory(this._source);
-		const ped: number = GetPlayerPed(this._source);
-		const coords: number[] = GetEntityCoords(ped);
-		const heading: number = GetEntityHeading(ped);
-		SaveCoords(this._source, new Vector4(coords[0], coords[1], coords[2], heading));
+		if (!newPlayer) {
+			const ped: number = GetPlayerPed(this._source);
+			const coords: number[] = GetEntityCoords(ped);
+			const heading: number = GetEntityHeading(ped);
+			SaveCoords(this._source, new Vector4(coords[0], coords[1], coords[2], heading));
+		}
 
 		setImmediate(async () => {
 			const affectedRows = await global.exports.oxmysql.update_async(

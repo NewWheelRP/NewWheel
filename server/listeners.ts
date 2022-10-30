@@ -28,7 +28,7 @@ onNet("NW:CreateNewCharacter", (data: CharacterNewObject) => {
 	const character: Character = new Character(source, player.getLicense(), true, data);
 	player.setCharacter(character);
 	player.setCurrentCharacter(character);
-	player.save();
+	player.save(false, true);
 	const clientObject: PlayerDataObject = player.toClientObject();
 	emit("NW:CharacterChosen", source, false);
 	UpdatePlayerDataClient(source, "update", "character", character.toClientObject());
@@ -38,7 +38,7 @@ onNet("NW:CreateNewCharacter", (data: CharacterNewObject) => {
 });
 
 onNet("NW:DeleteCharacter", (data: string) => {
-	const player: Player | undefined = GetPlayerFromSource(source);
+	const player: Player | undefined = GetPlayerFromSource(global.source);
 	if (!player) return;
 	player.deleteCharacter(data);
 });

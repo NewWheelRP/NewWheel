@@ -35,7 +35,7 @@ export class Player {
 		}
 	}
 
-	public save = (playerLeft?: boolean): void => {
+	public save = (playerLeft?: boolean, newPlayer?: boolean): void => {
 		const previousVal: PlayerDataObject = this.toClientObject();
 		const curDate = new Date();
 		const curTime = curDate.getTime();
@@ -53,7 +53,7 @@ export class Player {
 		});
 
 		// Save current character aswell
-		if (this._currentChar) this._currentChar.save(playerLeft);
+		if (this._currentChar) this._currentChar.save(playerLeft, newPlayer);
 
 			// Save every setting, each setting should implement its own save logic
 			this._settings.forEach((setting: any) => {
