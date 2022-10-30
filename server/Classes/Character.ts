@@ -29,8 +29,9 @@ export class Character {
 		this.setFirstName(data.firstName);
 		this.setLastName(data.lastName);
 		// @ts-ignore
-		this.setCoords(newChar ? Character.defaultCoords : data.coords);
+		this.setCoords(newChar ? Character.defaultCoords : JSON.parse(data.coords));
 		if (newChar) {
+			this.setCitizenId(generateUUIDv4());
 			if (data.dob) this.setDOB(new Date(data.dob).getTime());
 			if (data.height) this.setHeight(data.height);
 			if (data.sex) this.setSex(data.sex);

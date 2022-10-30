@@ -1,10 +1,10 @@
-import NW from "./client";
+import NW, { setForceRespawn, setSpawnCoords } from "./client";
 import { PlayerDataObject, CharacterDataObject } from "../types";
-import { Vector3 } from "@nativewrappers/client";
-import { Teleport } from "./functions";
+import { Vector4 } from "@nativewrappers/client";
 
-onNet("NW:Spawn", (coords: Vector3) => {
-	Teleport(coords);
+onNet("NW:Spawn", (coords: Vector4) => {
+	setSpawnCoords(coords);
+	setForceRespawn(true);
 });
 
 onNet("NW:ShowCharacterSelection", (characters: CharacterDataObject[]) => {

@@ -12,13 +12,13 @@ onNet("NW:SetCurrentChar", (id: string, updateClientData?: boolean) => {
 		console.error("No player was found");
 		return;
 	}
-	const char: Character | undefined = player.getCharacter(id);
-	if (!char) return;
-	player.setCurrentCharacter(char, updateClientData);
+	const character: Character | undefined = player.getCharacter(id);
+	if (!character) return;
+	player.setCurrentCharacter(character, updateClientData);
 	const clientObject: PlayerDataObject = player.toClientObject();
-	emit("NW:CharacterChosen", source, char.getCitizenId());
+	emit("NW:CharacterChosen", source, character.getCitizenId());
 	emitNet("NW:PlayerLoaded", source, clientObject);
-	emitNet("NW:Spawn", source, char.getCoords());
+	emitNet("NW:Spawn", source, character.getCoords());
 });
 
 onNet("NW:CreateNewCharacter", (data: CharacterNewObject) => {

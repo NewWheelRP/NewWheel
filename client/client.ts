@@ -34,28 +34,38 @@ import "./nui";
 import "./listeners";
 import * as config from "./../config.json";
 import { Vector4 } from "@nativewrappers/client";
-import { joaat } from "../shared/utils";
+import { joaat, Delay } from "../shared/utils";
 
 let joined: boolean = false;
 let spawning: boolean = false;
 let diedAt: number = -1;
+let forceRespawn: boolean = false;
 const defaultPedHash: number = joaat(config.characters.defaultPed);
-const defaultCoords: Vector4 = new Vector4(config.characters.defaultCoords.x, config.characters.defaultCoords.y, config.characters.defaultCoords.z, config.characters.defaultCoords.w);
+let spawnCoords: Vector4 = new Vector4(config.characters.defaultCoords.x, config.characters.defaultCoords.y, config.characters.defaultCoords.z, config.characters.defaultCoords.w);
 export const playerId: number = PlayerId();
 
+export const setSpawnCoords = (coords: Vector4) => {
+	spawnCoords = coords;
+};
+
+export const setForceRespawn = (respawn: boolean) => {
+	forceRespawn = respawn;
+};
+
 // casually borrowing from spawnmanager
-setInterval(() => {
+setInterval(async () => {
 	let playerPed: number = PlayerPedId();
 	if (!joined && NetworkIsPlayerActive(playerId)) {
 		joined = true;
 		DoScreenFadeOut(0);
 		emitNet("NW:PlayerJoined");
 	} else if (joined) {
-		if (diedAt !== -1 && Math.abs(GetGameTimer() - diedAt) > 2000 && !spawning) {
+		if ((diedAt !== -1 && Math.abs(GetGameTimer() - diedAt) > 2000 && !spawning) || forceRespawn) {
+			forceRespawn = false;
 			spawning = true;
 			DoScreenFadeOut(500);
-			while (true) {
-				if (IsScreenFadedOut()) break;
+			while (!IsScreenFadedOut()) {
+				await Delay(0);
 			}
 
 			SetPlayerControl(playerId, false, 0);
@@ -72,33 +82,33 @@ setInterval(() => {
 			}
 
 			RequestModel(defaultPedHash);
-			while (true) {
-				if (HasModelLoaded(defaultPedHash)) break;
+			while (!HasModelLoaded(defaultPedHash)) {
+				await Delay(0);
 			}
 
 			SetPlayerModel(playerId, defaultPedHash);
 			SetModelAsNoLongerNeeded(defaultPedHash);
-			RequestCollisionAtCoord(defaultCoords.x, defaultCoords.y, defaultCoords.z);
+			RequestCollisionAtCoord(spawnCoords.x, spawnCoords.y, spawnCoords.z);
 
 			playerPed = PlayerPedId();
 
-			SetEntityCoords(playerPed, defaultCoords.x, defaultCoords.y, defaultCoords.z, false, false, false, true);
-			NetworkResurrectLocalPlayer(defaultCoords.x, defaultCoords.y, defaultCoords.z, defaultCoords.w, true, true);
+			SetEntityCoords(playerPed, spawnCoords.x, spawnCoords.y, spawnCoords.z, false, false, false, true);
+			NetworkResurrectLocalPlayer(spawnCoords.x, spawnCoords.y, spawnCoords.z, spawnCoords.w, true, true);
 			ClearPedTasksImmediately(playerPed);
 			RemoveAllPedWeapons(playerPed, true);
 			ClearPlayerWantedLevel(playerId);
 
 			const time = GetGameTimer();
-			while (true) {
-				if (HasCollisionLoadedAroundEntity(playerPed) || GetGameTimer() - time > 5000) break;
+			while (!HasCollisionLoadedAroundEntity(playerPed) && GetGameTimer() - time < 5000) {
+				await Delay(0);
 			}
 
 			ShutdownLoadingScreen();
 			ShutdownLoadingScreenNui();
 			if (IsScreenFadedOut()) {
 				DoScreenFadeIn(500);
-				while (true) {
-					if (IsScreenFadedIn()) break;
+				while (!IsScreenFadedIn()) {
+					await Delay(0);
 				}
 			}
 
